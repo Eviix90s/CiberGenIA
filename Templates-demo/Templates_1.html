@@ -1,0 +1,1151 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>CiberGenIA — Esquema del Curso</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <style>
+    :root {
+      --bg-main:     #07080a;
+      --bg-card:     #0d0e12;
+      --bg-sidebar:  #0b0c10;
+      --bg-elevated: #131519;
+      --accent:      #00c853;
+      --accent-blue: #00a3ff;
+      --accent-warn: #f59e0b;
+      --accent-red:  #ef4444;
+      --accent-soft:      rgba(0, 200, 83, 0.08);
+      --accent-soft-blue: rgba(0, 163, 255, 0.08);
+      --text-main:   #e8eaf0;
+      --text-muted:  #636b7e;
+      --text-sec:    #8b92a5;
+      --border:      rgba(255,255,255,0.06);
+      --border-act:  rgba(0, 200, 83, 0.3);
+      --glass:       rgba(255,255,255,0.02);
+      --tr:          all 0.22s cubic-bezier(0.4,0,0.2,1);
+      --r-sm: 8px; --r-md: 12px; --r-lg: 18px;
+    }
+
+    * { margin:0; padding:0; box-sizing:border-box; }
+    html, body { height:100%; overflow:hidden; }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg-main);
+      color: var(--text-main);
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* ======================================================
+       TOP HEADER
+    ====================================================== */
+    .top-header {
+      background: rgba(7,8,10,0.96);
+      backdrop-filter: blur(20px);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 18px;
+      height: 58px;
+      border-bottom: 1px solid var(--border);
+      z-index: 200;
+      flex-shrink: 0;
+      gap: 14px;
+    }
+
+    .header-left { display:flex; align-items:center; gap:16px; flex-shrink:0; }
+
+    .brand { display:flex; align-items:center; gap:10px; }
+
+    .logo-box {
+      background: linear-gradient(135deg, var(--accent) 0%, var(--accent-blue) 100%);
+      width: 36px; height: 36px; border-radius: 9px;
+      display: flex; align-items: center; justify-content: center;
+      font-weight: 800; font-size: 12px; color: #000;
+      box-shadow: 0 0 16px rgba(0,200,83,.25), 0 0 32px rgba(0,163,255,.1);
+    }
+
+    .brand-name h1 { font-size: 14px; font-weight: 700; letter-spacing: -.3px; }
+    .brand-name p  { font-size: 10px; color: var(--text-muted); letter-spacing: .7px; text-transform: uppercase; }
+
+    .h-div { width:1px; height:26px; background: var(--border); }
+
+    .course-chip {
+      display: flex; align-items: center; gap: 7px;
+      background: var(--bg-elevated); border: 1px solid var(--border);
+      padding: 5px 12px; border-radius: 100px;
+      font-size: 12px; font-weight: 500; color: var(--text-sec);
+      white-space: nowrap;
+    }
+    .course-chip strong { color: var(--text-main); }
+
+    /* Header center */
+    .header-center { flex:1; display:flex; align-items:center; justify-content:center; }
+
+    .gp-wrap {
+      display:flex; align-items:center; gap:10px;
+      background: var(--bg-elevated); border: 1px solid var(--border);
+      padding: 5px 14px; border-radius: 100px;
+    }
+    .gp-lbl { font-size:11px; color:var(--text-muted); font-weight:500; white-space:nowrap; }
+    .gp-bar  { width:120px; height:5px; background:var(--border); border-radius:10px; overflow:hidden; }
+    .gp-fill {
+      height:100%;
+      background: linear-gradient(90deg, var(--accent), var(--accent-blue));
+      width: 42%; border-radius:10px;
+      box-shadow: 0 0 8px rgba(0,200,83,.4);
+    }
+    .gp-pct { font-size:12px; font-weight:700; color:var(--accent); }
+
+    /* Header right */
+    .header-right { display:flex; align-items:center; gap:8px; flex-shrink:0; }
+
+    .streak-badge {
+      display:flex; align-items:center; gap:5px;
+      background: rgba(245,158,11,.1);
+      border: 1px solid rgba(245,158,11,.2);
+      padding: 5px 10px; border-radius:100px;
+      font-size:11px; font-weight:700; color:var(--accent-warn);
+    }
+
+    .icon-btn {
+      background: var(--glass); border: 1px solid var(--border);
+      color: var(--text-muted);
+      width:35px; height:35px; border-radius:var(--r-sm);
+      cursor:pointer; display:flex; align-items:center; justify-content:center;
+      transition:var(--tr); position:relative;
+    }
+    .icon-btn:hover { background:var(--accent-soft); color:var(--accent); border-color:var(--border-act); }
+
+    .notif-dot {
+      position:absolute; top:6px; right:6px;
+      width:6px; height:6px;
+      background:var(--accent-red); border-radius:50%;
+      border:1.5px solid var(--bg-main);
+    }
+
+    .user-avatar {
+      width:35px; height:35px;
+      background: linear-gradient(135deg, var(--accent), var(--accent-blue));
+      border-radius:var(--r-sm);
+      display:flex; align-items:center; justify-content:center;
+      font-weight:700; font-size:12px; color:#000;
+      cursor:pointer; transition:var(--tr); border:1px solid transparent;
+    }
+    .user-avatar:hover { border-color:var(--border-act); box-shadow:0 0 12px rgba(0,200,83,.2); }
+
+    /* ======================================================
+       TOP NAV TABS
+    ====================================================== */
+    .nav-tabs {
+      background: var(--bg-sidebar);
+      display: flex;
+      border-bottom: 1px solid var(--border);
+      padding: 0 20px;
+      flex-shrink: 0;
+      gap: 2px;
+    }
+
+    .nav-tab {
+      display: flex; align-items: center; gap: 7px;
+      padding: 0 16px; height: 44px;
+      font-size: 12px; font-weight: 500;
+      color: var(--text-muted); cursor: pointer;
+      border-bottom: 2px solid transparent;
+      transition: var(--tr); border-radius: 0;
+      white-space: nowrap;
+    }
+    .nav-tab:hover { color: var(--text-main); background: var(--glass); }
+    .nav-tab.active {
+      color: var(--accent);
+      border-bottom-color: var(--accent);
+      background: var(--accent-soft);
+    }
+
+    .nav-tab-badge {
+      background: rgba(0,200,83,.15); color: var(--accent);
+      font-size: 9px; font-weight: 700;
+      padding: 1px 5px; border-radius: 8px;
+    }
+
+    /* ======================================================
+       MAIN LAYOUT
+    ====================================================== */
+    .main-layout { display:flex; flex:1; overflow:hidden; }
+
+    /* ======================================================
+       SIDEBAR
+    ====================================================== */
+    .sidebar {
+      width: 288px;
+      background: var(--bg-sidebar);
+      border-right: 1px solid var(--border);
+      display: flex; flex-direction: column;
+      flex-shrink: 0; overflow: hidden;
+    }
+
+    /* Sidebar top stats */
+    .sidebar-stats {
+      padding: 14px 14px 0;
+    }
+
+    .sb-stats-row { display:grid; grid-template-columns:1fr 1fr 1fr; gap:6px; margin-bottom:10px; }
+
+    .stat-pill {
+      background:var(--bg-elevated); border:1px solid var(--border);
+      border-radius:var(--r-sm); padding:8px 6px; text-align:center;
+    }
+    .stat-val { font-size:15px; font-weight:800; color:var(--text-main); display:block; line-height:1; margin-bottom:3px; }
+    .stat-lbl { font-size:9px; color:var(--text-muted); text-transform:uppercase; letter-spacing:.5px; }
+
+    .sb-prog {
+      background:var(--bg-elevated); border:1px solid var(--border);
+      border-radius:var(--r-sm); padding:10px 12px; margin-bottom:10px;
+    }
+    .sb-prog-row { display:flex; justify-content:space-between; align-items:center; margin-bottom:6px; }
+    .sb-prog-lbl { font-size:11px; color:var(--text-muted); font-weight:500; }
+    .sb-prog-val { font-size:12px; font-weight:700; color:var(--accent); }
+    .sb-prog-bar { height:5px; background:var(--border); border-radius:10px; overflow:hidden; }
+    .sb-prog-fill {
+      height:100%;
+      background: linear-gradient(90deg, var(--accent), var(--accent-blue));
+      width:42%; border-radius:10px;
+    }
+
+    /* Sidebar search */
+    .sb-search { padding: 0 12px 10px; }
+    .sb-search-wrap { position:relative; display:flex; align-items:center; }
+    .sb-search-wrap i { position:absolute; left:10px; color:var(--text-muted); width:13px; }
+    .sb-search-wrap input {
+      width:100%;
+      background:var(--bg-elevated); border:1px solid var(--border);
+      border-radius:var(--r-sm); padding:7px 10px 7px 30px;
+      color:var(--text-main); font-size:12px; outline:none;
+      font-family:'Inter',sans-serif; transition:var(--tr);
+    }
+    .sb-search-wrap input::placeholder { color:var(--text-muted); }
+    .sb-search-wrap input:focus { border-color:var(--border-act); box-shadow:0 0 0 2px var(--accent-soft); }
+
+    /* Course outline */
+    .course-outline { overflow-y:auto; flex:1; padding:0 10px 14px; }
+
+    .module-item { margin-bottom:3px; border-radius:var(--r-md); overflow:hidden; }
+
+    .module-header {
+      padding:10px 12px; cursor:pointer;
+      display:flex; flex-direction:column; gap:6px;
+      background:transparent; transition:var(--tr);
+      border-radius:var(--r-md); border:1px solid transparent;
+    }
+    .module-header:hover { background:var(--glass); border-color:var(--border); }
+    .module-header.open  { background:rgba(0,200,83,.04); border-color:rgba(0,200,83,.12); }
+
+    .mod-title-row { display:flex; justify-content:space-between; align-items:center; gap:8px; }
+    .mod-meta      { display:flex; align-items:center; gap:6px; }
+
+    .mod-num {
+      font-size:10px; font-weight:700; color:var(--text-muted);
+      background:var(--bg-elevated); padding:2px 6px;
+      border-radius:4px; letter-spacing:.3px; flex-shrink:0;
+    }
+    .mod-title { font-size:12px; font-weight:600; color:var(--text-main); line-height:1.3; }
+
+    .mod-right { display:flex; align-items:center; gap:6px; flex-shrink:0; }
+    .mod-pct   { font-size:10px; font-weight:700; color:var(--accent); }
+    .chevron   { color:var(--text-muted); transition:transform .22s ease; flex-shrink:0; }
+
+    .prog-mini { height:3px; background:var(--border); border-radius:2px; }
+    .prog-fill {
+      height:100%;
+      background: linear-gradient(90deg, var(--accent), var(--accent-blue));
+      border-radius:2px;
+    }
+
+    .lesson-list { padding:2px 4px 6px 8px; display:none; }
+    .lesson-list.open { display:block; }
+
+    .lesson-item {
+      display:flex; align-items:center; gap:8px;
+      padding:7px 10px; font-size:12px;
+      color:var(--text-sec); border-radius:var(--r-sm);
+      cursor:pointer; margin-bottom:1px; transition:var(--tr);
+      position:relative;
+    }
+    .lesson-item:hover { background:var(--glass); color:var(--text-main); }
+    .lesson-item.current { background:var(--accent-soft); color:var(--accent); font-weight:600; }
+    .lesson-item.current::before {
+      content:''; position:absolute; left:0; top:50%; transform:translateY(-50%);
+      width:3px; height:16px; background:var(--accent); border-radius:0 2px 2px 0;
+    }
+    .lesson-item.done { color:var(--text-muted); }
+
+    .ls-ico { width:15px; height:15px; flex-shrink:0; display:flex; align-items:center; justify-content:center; }
+    .ls-ico.check { background:rgba(0,200,83,.15); border-radius:50%; color:var(--accent); }
+    .ls-lbl  { flex:1; }
+    .ls-time { font-size:10px; color:var(--text-muted); flex-shrink:0; }
+
+    /* ======================================================
+       RESIZER
+    ====================================================== */
+    .resizer {
+      width: 4px; background: var(--border);
+      cursor: col-resize; flex-shrink:0;
+      transition: background .2s;
+    }
+    .resizer:hover { background: var(--accent); }
+
+    /* ======================================================
+       CONTENT AREA
+    ====================================================== */
+    .content-area { flex:1; display:flex; flex-direction:column; overflow:hidden; }
+
+    /* Content topbar */
+    .content-topbar {
+      background: var(--bg-sidebar);
+      border-bottom: 1px solid var(--border);
+      padding: 0 20px;
+      height: 46px;
+      display: flex; align-items: center; justify-content: space-between;
+      flex-shrink: 0; gap: 12px;
+    }
+
+    .ct-breadcrumb {
+      display:flex; align-items:center; gap:5px;
+      font-size:12px; color:var(--text-muted);
+    }
+    .ct-breadcrumb .bc-active { color:var(--accent); font-weight:600; }
+
+    .ct-actions { display:flex; align-items:center; gap:6px; }
+
+    .ct-btn {
+      display:flex; align-items:center; gap:5px;
+      background:var(--glass); border:1px solid var(--border);
+      color:var(--text-muted); padding:5px 10px;
+      border-radius:var(--r-sm); font-size:11px; font-weight:500;
+      cursor:pointer; transition:var(--tr); font-family:'Inter',sans-serif;
+    }
+    .ct-btn:hover { border-color:var(--border-act); color:var(--text-main); background:rgba(255,255,255,.03); }
+
+    .content-scroll { flex:1; overflow-y:auto; scroll-behavior:smooth; }
+
+    /* ======================================================
+       HERO BANNER
+    ====================================================== */
+    .hero-banner {
+      position:relative; height:250px;
+      display:flex; align-items:flex-end;
+      padding: 0 40px 28px;
+      overflow:hidden;
+    }
+
+    .hero-bg {
+      position:absolute; inset:0;
+      background: url('https://images.unsplash.com/photo-1550751827-4bd374c3f58b?w=1400&q=80') center/cover;
+      opacity:.2;
+    }
+
+    .hero-overlay {
+      position:absolute; inset:0;
+      background:
+        linear-gradient(to right, var(--bg-main) 20%, rgba(7,8,10,.2) 100%),
+        linear-gradient(to top, var(--bg-main) 0%, transparent 55%);
+    }
+
+    .hero-inner {
+      position:relative; z-index:1;
+      display:flex; align-items:flex-end; justify-content:space-between; width:100%;
+    }
+
+    .hero-chip {
+      display:inline-flex; align-items:center; gap:6px;
+      background:var(--accent-soft); color:var(--accent);
+      border:1px solid rgba(0,200,83,.2);
+      padding:4px 10px; border-radius:20px;
+      font-size:10px; font-weight:700; text-transform:uppercase;
+      letter-spacing:.5px; margin-bottom:10px;
+    }
+
+    .hero-h1 {
+      font-size:28px; font-weight:800; letter-spacing:-.7px;
+      background: linear-gradient(135deg, #fff 0%, #94a3b8 100%);
+      -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent;
+      line-height:1.15; margin-bottom:10px;
+    }
+
+    .hero-sub { font-size:13px; color:var(--text-sec); line-height:1.6; max-width:520px; }
+
+    .hero-meta-col { display:flex; flex-direction:column; gap:8px; align-items:flex-end; }
+    .hero-meta-item { display:flex; align-items:center; gap:6px; font-size:11px; color:var(--text-muted); }
+
+    /* ======================================================
+       COURSE BODY
+    ====================================================== */
+    .course-body { padding:28px 40px 48px; max-width:960px; }
+
+    .sec-label {
+      font-size:10px; font-weight:700; letter-spacing:1px;
+      text-transform:uppercase; color:var(--text-muted);
+      margin-bottom:6px; display:flex; align-items:center; gap:8px;
+    }
+    .sec-label::after { content:''; flex:1; height:1px; background:var(--border); }
+
+    .sec-title { font-size:19px; font-weight:700; letter-spacing:-.4px; margin-bottom:8px; }
+    .sec-desc  { font-size:13px; color:var(--text-sec); line-height:1.75; margin-bottom:24px; max-width:700px; }
+    .sec-desc strong { color:var(--text-main); }
+
+    /* Video card */
+    .video-card {
+      width:100%; aspect-ratio:16/9;
+      background:#000; border-radius:var(--r-lg);
+      border:1px solid var(--border); overflow:hidden;
+      position:relative; cursor:pointer;
+      box-shadow:0 20px 60px -20px rgba(0,0,0,.8);
+      transition:var(--tr); margin-bottom:14px;
+    }
+    .video-card:hover { border-color:var(--border-act); }
+    .video-card:hover .vc-overlay { background:rgba(0,0,0,.35); }
+    .video-card:hover .play-circle { transform:scale(1.08); box-shadow:0 0 60px rgba(0,200,83,.5); }
+
+    .vc-bg {
+      position:absolute; inset:0;
+      background:
+        linear-gradient(135deg, rgba(0,200,83,.04) 0%, rgba(0,163,255,.04) 100%),
+        linear-gradient(to right, #0a1a0f, #0a141f);
+    }
+
+    .vc-overlay {
+      position:absolute; inset:0;
+      background:rgba(0,0,0,.5);
+      display:flex; flex-direction:column;
+      align-items:center; justify-content:center; gap:12px;
+      transition:var(--tr);
+    }
+
+    .play-circle {
+      width:68px; height:68px;
+      background:var(--accent); border-radius:50%;
+      display:flex; align-items:center; justify-content:center;
+      color:#000;
+      box-shadow:0 0 40px rgba(0,200,83,.35), 0 0 80px rgba(0,200,83,.15);
+      transition:var(--tr);
+    }
+
+    .vc-hint { font-size:12px; color:rgba(255,255,255,.55); font-weight:500; }
+
+    .vc-strip {
+      display:flex; align-items:center; justify-content:space-between;
+      background:var(--bg-elevated); border:1px solid var(--border);
+      border-radius:var(--r-md); padding:11px 16px; margin-bottom:32px; gap:10px; flex-wrap:wrap;
+    }
+    .vs-item { display:flex; align-items:center; gap:7px; font-size:11px; color:var(--text-muted); }
+    .vs-item strong { color:var(--text-main); font-weight:600; }
+    .vs-sep { width:1px; height:18px; background:var(--border); }
+
+    /* Objectives */
+    .obj-grid {
+      display:grid; grid-template-columns:repeat(auto-fill, minmax(200px, 1fr));
+      gap:12px; margin-bottom:36px;
+    }
+
+    .obj-card {
+      background:var(--bg-elevated); border:1px solid var(--border);
+      padding:18px; border-radius:var(--r-md);
+      transition:var(--tr); position:relative; overflow:hidden;
+    }
+    .obj-card::before {
+      content:''; position:absolute; top:0; left:0; right:0; height:2px;
+      background:linear-gradient(90deg, var(--accent), var(--accent-blue));
+      opacity:0; transition:var(--tr);
+    }
+    .obj-card:hover { border-color:rgba(0,200,83,.2); transform:translateY(-3px); }
+    .obj-card:hover::before { opacity:1; }
+
+    .obj-ico {
+      width:38px; height:38px;
+      background:var(--accent-soft); border-radius:var(--r-sm);
+      display:flex; align-items:center; justify-content:center;
+      color:var(--accent); margin-bottom:12px;
+      border:1px solid rgba(0,200,83,.15);
+    }
+    .obj-card h4 { font-size:13px; font-weight:700; margin-bottom:5px; }
+    .obj-card p  { font-size:12px; color:var(--text-muted); line-height:1.6; margin:0; }
+
+    /* Modules section */
+    .mods-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:14px; }
+
+    .mod-card {
+      background:var(--bg-elevated); border:1px solid var(--border);
+      border-radius:var(--r-md); padding:14px 16px; margin-bottom:8px;
+      display:flex; align-items:center; gap:14px;
+      cursor:pointer; transition:var(--tr);
+    }
+    .mod-card:hover { border-color:rgba(0,200,83,.2); background:rgba(255,255,255,.02); }
+
+    .mod-card-num {
+      width:34px; height:34px;
+      background:var(--accent-soft); border:1px solid rgba(0,200,83,.2);
+      border-radius:var(--r-sm);
+      display:flex; align-items:center; justify-content:center;
+      font-size:13px; font-weight:800; color:var(--accent);
+      flex-shrink:0;
+    }
+    .mod-card-num.done { background:rgba(0,200,83,.15); border-color:rgba(0,200,83,.3); }
+    .mod-card-num.partial { background:rgba(0,163,255,.08); border-color:rgba(0,163,255,.2); color:var(--accent-blue); }
+    .mod-card-num.locked { background:var(--bg-card); border-color:var(--border); color:var(--text-muted); }
+
+    .mod-card-info { flex:1; }
+    .mod-card-title { font-size:13px; font-weight:600; color:var(--text-main); margin-bottom:4px; }
+    .mod-card-meta  { font-size:11px; color:var(--text-muted); display:flex; align-items:center; gap:8px; }
+
+    .mod-card-right { display:flex; flex-direction:column; align-items:flex-end; gap:6px; flex-shrink:0; }
+
+    .mod-badge {
+      font-size:11px; font-weight:700;
+      padding:3px 9px; border-radius:10px; white-space:nowrap;
+    }
+    .mod-badge.done    { background:rgba(0,200,83,.12);  color:var(--accent);      border:1px solid rgba(0,200,83,.25); }
+    .mod-badge.partial { background:rgba(0,163,255,.1);  color:var(--accent-blue); border:1px solid rgba(0,163,255,.2); }
+    .mod-badge.locked  { background:var(--bg-card);      color:var(--text-muted);  border:1px solid var(--border); }
+
+    .mod-card-bar { width:80px; height:4px; background:var(--border); border-radius:2px; overflow:hidden; }
+    .mod-card-bar-fill {
+      height:100%;
+      background:linear-gradient(90deg, var(--accent), var(--accent-blue));
+      border-radius:2px;
+    }
+
+    /* ======================================================
+       BOTTOM NAV
+    ====================================================== */
+    .bottom-nav {
+      height:64px;
+      background:var(--bg-sidebar); border-top:1px solid var(--border);
+      padding:0 28px;
+      display:flex; align-items:center; justify-content:space-between;
+      flex-shrink:0;
+    }
+
+    .nav-lesson-info { display:flex; align-items:center; gap:12px; }
+
+    .nav-ico {
+      width:36px; height:36px;
+      background:var(--accent-soft); border-radius:var(--r-sm);
+      display:flex; align-items:center; justify-content:center;
+      color:var(--accent); border:1px solid rgba(0,200,83,.15);
+    }
+
+    .nav-lbl  { font-size:10px; color:var(--text-muted); text-transform:uppercase; letter-spacing:.6px; margin-bottom:3px; }
+    .nav-name { font-size:13px; font-weight:600; color:var(--text-main); }
+
+    .nav-actions { display:flex; align-items:center; gap:8px; }
+
+    .btn-ghost {
+      background:transparent; border:1px solid var(--border);
+      color:var(--text-muted); padding:7px 16px;
+      border-radius:var(--r-sm); font-weight:600; font-size:12px;
+      cursor:pointer; display:flex; align-items:center; gap:6px;
+      transition:var(--tr); font-family:'Inter',sans-serif;
+    }
+    .btn-ghost:hover { border-color:var(--border-act); color:var(--text-main); }
+
+    .btn-primary {
+      background:var(--accent); color:#000; border:none;
+      padding:8px 20px; border-radius:var(--r-sm);
+      font-weight:700; font-size:12px; cursor:pointer;
+      display:flex; align-items:center; gap:6px;
+      transition:var(--tr); font-family:'Inter',sans-serif;
+    }
+    .btn-primary:hover {
+      box-shadow:0 0 20px rgba(0,200,83,.3), 0 4px 12px rgba(0,0,0,.3);
+      transform:translateY(-1px);
+    }
+
+    /* Scrollbar */
+    ::-webkit-scrollbar { width:5px; }
+    ::-webkit-scrollbar-track { background:transparent; }
+    ::-webkit-scrollbar-thumb { background:rgba(255,255,255,.07); border-radius:10px; }
+    ::-webkit-scrollbar-thumb:hover { background:rgba(0,200,83,.3); }
+
+    /* Animations */
+    @keyframes fadeUp { from { opacity:0; transform:translateY(10px); } to { opacity:1; transform:translateY(0); } }
+    .fade-up { animation: fadeUp .35s ease forwards; }
+  </style>
+</head>
+<body>
+
+  <!-- ============================================================
+       TOP HEADER
+  ============================================================ -->
+  <header class="top-header">
+    <div class="header-left">
+      <div class="brand">
+        <div class="logo-box">CG</div>
+        <div class="brand-name">
+          <h1>CiberGenIA</h1>
+          <p>TecNM · Plataforma Educativa</p>
+        </div>
+      </div>
+      <div class="h-div"></div>
+      <div class="course-chip">
+        <i data-lucide="book-open" size="13"></i>
+        <strong>IA Generativa</strong> &amp; Ciberseguridad
+      </div>
+    </div>
+
+    <div class="header-center">
+      <div class="gp-wrap">
+        <span class="gp-lbl">Progreso del curso</span>
+        <div class="gp-bar"><div class="gp-fill"></div></div>
+        <span class="gp-pct">42%</span>
+      </div>
+    </div>
+
+    <div class="header-right">
+      <div class="streak-badge">
+        <i data-lucide="zap" size="12" style="fill:currentColor"></i>
+        7 días
+      </div>
+      <button class="icon-btn" title="Calificaciones">
+        <i data-lucide="bar-chart-2" size="15"></i>
+      </button>
+      <button class="icon-btn" title="Notificaciones">
+        <i data-lucide="bell" size="15"></i>
+        <span class="notif-dot"></span>
+      </button>
+      <button class="icon-btn" title="Pantalla completa">
+        <i data-lucide="maximize-2" size="15"></i>
+      </button>
+      <div class="user-avatar" title="Mi perfil">EA</div>
+    </div>
+  </header>
+
+  <!-- ============================================================
+       TOP NAV TABS
+  ============================================================ -->
+  <nav class="nav-tabs">
+    <div class="nav-tab active" onclick="switchNavTab(this)">
+      <i data-lucide="layout-list" size="13"></i>
+      Esquema del Curso
+    </div>
+    <div class="nav-tab" onclick="switchNavTab(this)">
+      <i data-lucide="file-text" size="13"></i>
+      Recursos
+      <span class="nav-tab-badge">5</span>
+    </div>
+    <div class="nav-tab" onclick="switchNavTab(this)">
+      <i data-lucide="bookmark" size="13"></i>
+      Favoritos
+    </div>
+    <div class="nav-tab" onclick="switchNavTab(this)">
+      <i data-lucide="clipboard-check" size="13"></i>
+      Calificaciones
+    </div>
+  </nav>
+
+  <!-- ============================================================
+       MAIN LAYOUT
+  ============================================================ -->
+  <div class="main-layout">
+
+    <!-- ============================================================
+         SIDEBAR
+    ============================================================ -->
+    <aside class="sidebar">
+      <div class="sidebar-stats">
+        <div class="sb-stats-row">
+          <div class="stat-pill">
+            <span class="stat-val">43</span>
+            <span class="stat-lbl">Lecciones</span>
+          </div>
+          <div class="stat-pill">
+            <span class="stat-val">18h</span>
+            <span class="stat-lbl">Duración</span>
+          </div>
+          <div class="stat-pill">
+            <span class="stat-val" style="color:var(--accent)">18</span>
+            <span class="stat-lbl">Hechas</span>
+          </div>
+        </div>
+        <div class="sb-prog">
+          <div class="sb-prog-row">
+            <span class="sb-prog-lbl">Completado</span>
+            <span class="sb-prog-val">42%</span>
+          </div>
+          <div class="sb-prog-bar"><div class="sb-prog-fill"></div></div>
+        </div>
+      </div>
+
+      <div class="sb-search">
+        <div class="sb-search-wrap">
+          <i data-lucide="search" size="13"></i>
+          <input type="text" placeholder="Buscar en el esquema..." />
+        </div>
+      </div>
+
+      <div class="course-outline">
+
+        <!-- Módulo 0 -->
+        <div class="module-item">
+          <div class="module-header open" onclick="toggleMod(this)">
+            <div class="mod-title-row">
+              <div class="mod-meta">
+                <span class="mod-num">M0</span>
+                <span class="mod-title">Introducción al Curso</span>
+              </div>
+              <div class="mod-right">
+                <span class="mod-pct">100%</span>
+                <i data-lucide="chevron-down" class="chevron" size="13" style="transform:rotate(180deg)"></i>
+              </div>
+            </div>
+            <div class="prog-mini"><div class="prog-fill" style="width:100%"></div></div>
+          </div>
+          <div class="lesson-list open">
+            <div class="lesson-item done">
+              <div class="ls-ico check"><i data-lucide="check" size="9"></i></div>
+              <span class="ls-lbl">Bienvenido al Curso</span>
+              <span class="ls-time">3 min</span>
+            </div>
+            <div class="lesson-item current">
+              <div class="ls-ico"><i data-lucide="play-circle" size="14"></i></div>
+              <span class="ls-lbl">¿Qué aprenderás?</span>
+              <span class="ls-time">5 min</span>
+            </div>
+            <div class="lesson-item done">
+              <div class="ls-ico check"><i data-lucide="check" size="9"></i></div>
+              <span class="ls-lbl">Declaración de Compromiso</span>
+              <span class="ls-time">2 min</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Módulo 1 -->
+        <div class="module-item">
+          <div class="module-header" onclick="toggleMod(this)">
+            <div class="mod-title-row">
+              <div class="mod-meta">
+                <span class="mod-num">M1</span>
+                <span class="mod-title">Fundamentos de IA Generativa</span>
+              </div>
+              <div class="mod-right">
+                <span class="mod-pct" style="color:var(--accent-blue)">65%</span>
+                <i data-lucide="chevron-down" class="chevron" size="13"></i>
+              </div>
+            </div>
+            <div class="prog-mini"><div class="prog-fill" style="width:65%"></div></div>
+          </div>
+          <div class="lesson-list">
+            <div class="lesson-item done"><div class="ls-ico check"><i data-lucide="check" size="9"></i></div><span class="ls-lbl">Historia de la IA</span><span class="ls-time">8 min</span></div>
+            <div class="lesson-item done"><div class="ls-ico check"><i data-lucide="check" size="9"></i></div><span class="ls-lbl">¿Qué es GenAI?</span><span class="ls-time">12 min</span></div>
+            <div class="lesson-item"><div class="ls-ico"><i data-lucide="play-circle" size="14"></i></div><span class="ls-lbl">Modelos de Lenguaje</span><span class="ls-time">15 min</span></div>
+            <div class="lesson-item" style="opacity:.5"><div class="ls-ico"><i data-lucide="lock" size="12"></i></div><span class="ls-lbl">Redes Neuronales</span><span class="ls-time">18 min</span></div>
+          </div>
+        </div>
+
+        <!-- Módulo 2 -->
+        <div class="module-item">
+          <div class="module-header" onclick="toggleMod(this)">
+            <div class="mod-title-row">
+              <div class="mod-meta">
+                <span class="mod-num">M2</span>
+                <span class="mod-title">Modelos de Lenguaje y Prompting</span>
+              </div>
+              <div class="mod-right">
+                <span class="mod-pct" style="color:var(--accent-blue)">30%</span>
+                <i data-lucide="chevron-down" class="chevron" size="13"></i>
+              </div>
+            </div>
+            <div class="prog-mini"><div class="prog-fill" style="width:30%"></div></div>
+          </div>
+          <div class="lesson-list"></div>
+        </div>
+
+        <!-- Módulo 3 -->
+        <div class="module-item">
+          <div class="module-header" onclick="toggleMod(this)">
+            <div class="mod-title-row">
+              <div class="mod-meta">
+                <span class="mod-num">M3</span>
+                <span class="mod-title">Ciberseguridad Básica</span>
+              </div>
+              <div class="mod-right">
+                <span class="mod-pct" style="color:var(--text-muted)">0%</span>
+                <i data-lucide="chevron-down" class="chevron" size="13"></i>
+              </div>
+            </div>
+            <div class="prog-mini"><div class="prog-fill" style="width:0%"></div></div>
+          </div>
+          <div class="lesson-list"></div>
+        </div>
+
+        <!-- Módulo 4 -->
+        <div class="module-item">
+          <div class="module-header" onclick="toggleMod(this)">
+            <div class="mod-title-row">
+              <div class="mod-meta">
+                <span class="mod-num">M4</span>
+                <span class="mod-title">Amenazas y Vulnerabilidades</span>
+              </div>
+              <div class="mod-right">
+                <span class="mod-pct" style="color:var(--text-muted)">0%</span>
+                <i data-lucide="chevron-down" class="chevron" size="13"></i>
+              </div>
+            </div>
+            <div class="prog-mini"><div class="prog-fill" style="width:0%"></div></div>
+          </div>
+          <div class="lesson-list"></div>
+        </div>
+
+        <!-- Módulo 5 -->
+        <div class="module-item">
+          <div class="module-header" onclick="toggleMod(this)">
+            <div class="mod-title-row">
+              <div class="mod-meta">
+                <span class="mod-num">M5</span>
+                <span class="mod-title">Ethical Hacking e IA</span>
+              </div>
+              <div class="mod-right">
+                <span class="mod-pct" style="color:var(--text-muted)">0%</span>
+                <i data-lucide="chevron-down" class="chevron" size="13"></i>
+              </div>
+            </div>
+            <div class="prog-mini"><div class="prog-fill" style="width:0%"></div></div>
+          </div>
+          <div class="lesson-list"></div>
+        </div>
+
+        <!-- Módulo 6 -->
+        <div class="module-item">
+          <div class="module-header" onclick="toggleMod(this)">
+            <div class="mod-title-row">
+              <div class="mod-meta">
+                <span class="mod-num">M6</span>
+                <span class="mod-title">Proyecto Final Integrador</span>
+              </div>
+              <div class="mod-right">
+                <span class="mod-pct" style="color:var(--text-muted)">0%</span>
+                <i data-lucide="chevron-down" class="chevron" size="13"></i>
+              </div>
+            </div>
+            <div class="prog-mini"><div class="prog-fill" style="width:0%"></div></div>
+          </div>
+          <div class="lesson-list"></div>
+        </div>
+
+      </div>
+    </aside>
+
+    <!-- RESIZER -->
+    <div class="resizer" id="resizer"></div>
+
+    <!-- ============================================================
+         CONTENT AREA
+    ============================================================ -->
+    <main class="content-area">
+
+      <!-- Content topbar -->
+      <div class="content-topbar">
+        <div class="ct-breadcrumb">
+          <i data-lucide="layout-list" size="13"></i>
+          <span>Esquema del Curso</span>
+          <i data-lucide="chevron-right" size="11"></i>
+          <span class="bc-active">Introducción al Curso</span>
+        </div>
+        <div class="ct-actions">
+          <button class="ct-btn"><i data-lucide="search" size="12"></i>Buscar</button>
+          <button class="ct-btn"><i data-lucide="globe" size="12"></i>ES</button>
+          <button class="ct-btn"><i data-lucide="maximize-2" size="12"></i>Pantalla completa</button>
+        </div>
+      </div>
+
+      <div class="content-scroll">
+
+        <!-- Hero -->
+        <div class="hero-banner">
+          <div class="hero-bg"></div>
+          <div class="hero-overlay"></div>
+          <div class="hero-inner">
+            <div>
+              <div class="hero-chip">
+                <i data-lucide="star" size="10" style="fill:currentColor"></i>
+                Módulo de Bienvenida
+              </div>
+              <h1 class="hero-h1">Introducción al Curso</h1>
+              <p class="hero-sub">
+                Explora el programa completo de IA Generativa y Ciberseguridad. Conoce los objetivos, la metodología y el camino que recorrerás durante este curso.
+              </p>
+            </div>
+            <div class="hero-meta-col">
+              <div class="hero-meta-item"><i data-lucide="clock" size="12"></i>18 horas totales</div>
+              <div class="hero-meta-item"><i data-lucide="layers" size="12"></i>7 módulos</div>
+              <div class="hero-meta-item"><i data-lucide="users" size="12"></i>248 estudiantes</div>
+              <div class="hero-meta-item"><i data-lucide="award" size="12"></i>Certificado incluido</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Course body -->
+        <div class="course-body">
+
+          <!-- Intro text + video -->
+          <div class="sec-label">Presentación del curso</div>
+          <h2 class="sec-title">Bienvenido al Curso de IA Generativa y Ciberseguridad</h2>
+          <p class="sec-desc">
+            <strong>Selecciona Reproducir</strong> para ver el video de presentación. Este programa está diseñado para que adquieras competencias prácticas en inteligencia artificial generativa y seguridad informática con enfoque profesional.
+          </p>
+
+          <!-- Video -->
+          <div class="video-card">
+            <div class="vc-bg"></div>
+            <div class="vc-overlay">
+              <div class="play-circle">
+                <i data-lucide="play" size="26" style="margin-left:3px"></i>
+              </div>
+              <span class="vc-hint">Reproducir video de introducción &nbsp;·&nbsp; 4:30 min</span>
+            </div>
+          </div>
+
+          <!-- Video strip -->
+          <div class="vc-strip">
+            <div class="vs-item"><i data-lucide="user" size="13"></i><span>Instructor: <strong>Alejandro Ramirez</strong></span></div>
+            <div class="vs-sep"></div>
+            <div class="vs-item"><i data-lucide="calendar" size="13"></i><span>Actualizado: <strong>Mayo 2026</strong></span></div>
+            <div class="vs-sep"></div>
+            <div class="vs-item"><i data-lucide="globe" size="13"></i><span>Idioma: <strong>Español</strong></span></div>
+            <div class="vs-sep"></div>
+            <div class="vs-item"><i data-lucide="award" size="13"></i><span>Emite <strong>Certificado</strong></span></div>
+          </div>
+
+          <!-- Objectives -->
+          <div class="sec-label">Objetivos de aprendizaje</div>
+          <h2 class="sec-title">¿Qué aprenderás en este curso?</h2>
+          <p class="sec-desc">Al completar el programa serás capaz de aplicar las siguientes competencias:</p>
+
+          <div class="obj-grid">
+            <div class="obj-card fade-up" style="animation-delay:.00s">
+              <div class="obj-ico"><i data-lucide="cpu" size="17"></i></div>
+              <h4>IA Generativa</h4>
+              <p>Comprende cómo funcionan los modelos generativos modernos y sus aplicaciones.</p>
+            </div>
+            <div class="obj-card fade-up" style="animation-delay:.06s">
+              <div class="obj-ico"><i data-lucide="message-square" size="17"></i></div>
+              <h4>Prompt Engineering</h4>
+              <p>Diseña instrucciones efectivas para obtener resultados precisos de LLMs.</p>
+            </div>
+            <div class="obj-card fade-up" style="animation-delay:.12s">
+              <div class="obj-ico"><i data-lucide="lock" size="17"></i></div>
+              <h4>Ciberseguridad</h4>
+              <p>Identifica amenazas y aplica controles de seguridad informática básicos.</p>
+            </div>
+            <div class="obj-card fade-up" style="animation-delay:.18s">
+              <div class="obj-ico"><i data-lucide="shield" size="17"></i></div>
+              <h4>Ethical Hacking</h4>
+              <p>Aplica técnicas éticas de pentesting para evaluar sistemas y redes.</p>
+            </div>
+            <div class="obj-card fade-up" style="animation-delay:.24s">
+              <div class="obj-ico"><i data-lucide="bar-chart-2" size="17"></i></div>
+              <h4>Análisis con IA</h4>
+              <p>Usa modelos de IA para interpretar y visualizar datos de seguridad.</p>
+            </div>
+            <div class="obj-card fade-up" style="animation-delay:.30s">
+              <div class="obj-ico"><i data-lucide="award" size="17"></i></div>
+              <h4>Certificación</h4>
+              <p>Obtén el certificado institucional TecNM al completar el programa.</p>
+            </div>
+          </div>
+
+          <!-- Modules overview -->
+          <div class="sec-label">Contenido del programa</div>
+          <div class="mods-header">
+            <h2 class="sec-title" style="margin-bottom:0">Contenido del Curso</h2>
+            <span style="font-size:12px;color:var(--text-muted)">7 módulos · 43 lecciones · 18h</span>
+          </div>
+
+          <div class="mod-card fade-up" style="animation-delay:.0s">
+            <div class="mod-card-num done">0</div>
+            <div class="mod-card-info">
+              <div class="mod-card-title">Introducción al Curso</div>
+              <div class="mod-card-meta">
+                <i data-lucide="play-circle" size="11"></i> 3 lecciones
+                <span>·</span>
+                <i data-lucide="clock" size="11"></i> 10 min
+                <span>·</span> Bienvenida, objetivos y compromiso
+              </div>
+            </div>
+            <div class="mod-card-right">
+              <span class="mod-badge done">100%</span>
+              <div class="mod-card-bar"><div class="mod-card-bar-fill" style="width:100%"></div></div>
+            </div>
+          </div>
+
+          <div class="mod-card fade-up" style="animation-delay:.05s">
+            <div class="mod-card-num partial">1</div>
+            <div class="mod-card-info">
+              <div class="mod-card-title">Fundamentos de IA Generativa</div>
+              <div class="mod-card-meta">
+                <i data-lucide="play-circle" size="11"></i> 8 lecciones
+                <span>·</span>
+                <i data-lucide="clock" size="11"></i> 2.5h
+                <span>·</span> Conceptos base, historia y aplicaciones
+              </div>
+            </div>
+            <div class="mod-card-right">
+              <span class="mod-badge partial">65%</span>
+              <div class="mod-card-bar"><div class="mod-card-bar-fill" style="width:65%;background:var(--accent-blue)"></div></div>
+            </div>
+          </div>
+
+          <div class="mod-card fade-up" style="animation-delay:.10s">
+            <div class="mod-card-num partial">2</div>
+            <div class="mod-card-info">
+              <div class="mod-card-title">Modelos de Lenguaje y Prompting</div>
+              <div class="mod-card-meta">
+                <i data-lucide="play-circle" size="11"></i> 6 lecciones
+                <span>·</span>
+                <i data-lucide="clock" size="11"></i> 2h
+                <span>·</span> LLMs, GPT, técnicas de prompting
+              </div>
+            </div>
+            <div class="mod-card-right">
+              <span class="mod-badge partial">30%</span>
+              <div class="mod-card-bar"><div class="mod-card-bar-fill" style="width:30%;background:var(--accent-blue)"></div></div>
+            </div>
+          </div>
+
+          <div class="mod-card fade-up" style="animation-delay:.15s">
+            <div class="mod-card-num locked">3</div>
+            <div class="mod-card-info">
+              <div class="mod-card-title">Ciberseguridad Básica</div>
+              <div class="mod-card-meta">
+                <i data-lucide="play-circle" size="11"></i> 7 lecciones
+                <span>·</span>
+                <i data-lucide="clock" size="11"></i> 2.5h
+                <span>·</span> CIA Triad, protocolos y controles
+              </div>
+            </div>
+            <div class="mod-card-right">
+              <span class="mod-badge locked">0%</span>
+              <div class="mod-card-bar"><div class="mod-card-bar-fill" style="width:0%"></div></div>
+            </div>
+          </div>
+
+          <div class="mod-card fade-up" style="animation-delay:.20s">
+            <div class="mod-card-num locked">4</div>
+            <div class="mod-card-info">
+              <div class="mod-card-title">Amenazas y Vulnerabilidades</div>
+              <div class="mod-card-meta">
+                <i data-lucide="play-circle" size="11"></i> 9 lecciones
+                <span>·</span>
+                <i data-lucide="clock" size="11"></i> 3h
+                <span>·</span> Malware, phishing, CVEs, OWASP
+              </div>
+            </div>
+            <div class="mod-card-right">
+              <span class="mod-badge locked">0%</span>
+              <div class="mod-card-bar"><div class="mod-card-bar-fill" style="width:0%"></div></div>
+            </div>
+          </div>
+
+          <div class="mod-card fade-up" style="animation-delay:.25s">
+            <div class="mod-card-num locked">5</div>
+            <div class="mod-card-info">
+              <div class="mod-card-title">Ethical Hacking e IA</div>
+              <div class="mod-card-meta">
+                <i data-lucide="play-circle" size="11"></i> 10 lecciones
+                <span>·</span>
+                <i data-lucide="clock" size="11"></i> 4h
+                <span>·</span> Pentesting, herramientas, IA aplicada
+              </div>
+            </div>
+            <div class="mod-card-right">
+              <span class="mod-badge locked">0%</span>
+              <div class="mod-card-bar"><div class="mod-card-bar-fill" style="width:0%"></div></div>
+            </div>
+          </div>
+
+          <div class="mod-card fade-up" style="animation-delay:.30s">
+            <div class="mod-card-num locked">6</div>
+            <div class="mod-card-info">
+              <div class="mod-card-title">Proyecto Final Integrador</div>
+              <div class="mod-card-meta">
+                <i data-lucide="play-circle" size="11"></i> 4 lecciones
+                <span>·</span>
+                <i data-lucide="clock" size="11"></i> 2h
+                <span>·</span> Caso práctico y presentación final
+              </div>
+            </div>
+            <div class="mod-card-right">
+              <span class="mod-badge locked">0%</span>
+              <div class="mod-card-bar"><div class="mod-card-bar-fill" style="width:0%"></div></div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- ============================================================
+           BOTTOM NAV
+      ============================================================ -->
+      <footer class="bottom-nav">
+        <div class="nav-lesson-info">
+          <div class="nav-ico"><i data-lucide="book-open" size="16"></i></div>
+          <div>
+            <div class="nav-lbl">Lección actual</div>
+            <div class="nav-name">0.2 — ¿Qué aprenderás?</div>
+          </div>
+        </div>
+        <div class="nav-actions">
+          <button class="btn-ghost">
+            <i data-lucide="arrow-left" size="13"></i>
+            Anterior
+          </button>
+          <button class="btn-primary">
+            Siguiente
+            <i data-lucide="arrow-right" size="13"></i>
+          </button>
+        </div>
+      </footer>
+
+    </main>
+  </div>
+
+  <script>
+    lucide.createIcons();
+
+    function toggleMod(el) {
+      const list = el.nextElementSibling;
+      const chevron = el.querySelector('.chevron');
+      if (!list) return;
+      const opening = !list.classList.contains('open');
+      list.classList.toggle('open', opening);
+      el.classList.toggle('open', opening);
+      chevron.style.transform = opening ? 'rotate(180deg)' : 'rotate(0deg)';
+    }
+
+    function switchNavTab(el) {
+      document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+      el.classList.add('active');
+    }
+
+    /* Resizer drag */
+    const resizer = document.getElementById('resizer');
+    const sidebar  = document.querySelector('.sidebar');
+    let dragging = false;
+
+    resizer.addEventListener('mousedown', () => { dragging = true; document.body.style.cursor = 'col-resize'; });
+    document.addEventListener('mouseup',  () => { dragging = false; document.body.style.cursor = ''; });
+    document.addEventListener('mousemove', e => {
+      if (!dragging) return;
+      const min = 220, max = 420;
+      const w = Math.min(max, Math.max(min, e.clientX));
+      sidebar.style.width = w + 'px';
+    });
+  </script>
+
+</body>
+</html>

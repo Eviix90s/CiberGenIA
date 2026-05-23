@@ -1,0 +1,1168 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CiberGenIA — Panel de Administración</title>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;900&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<script src="https://unpkg.com/lucide@latest"></script>
+<style>
+  :root {
+    --bg-base:    #07080f;
+    --bg-card:    #0d0f1d;
+    --bg-hover:   #121525;
+    --bg-sidebar: #090b18;
+    --purple:     #a855f7;
+    --violet:     #7c3aed;
+    --cyan:       #00e5ff;
+    --green:      #39ff6e;
+    --amber:      #ffb800;
+    --red:        #ff4d6a;
+    --purple-soft: rgba(168,85,247,0.08);
+    --text-primary:   #e8eaff;
+    --text-secondary: #7a80ad;
+    --text-muted:     #3d4270;
+    --border:     rgba(168,85,247,0.1);
+    --border-act: rgba(168,85,247,0.4);
+    --glow-p:     0 0 20px rgba(168,85,247,0.25);
+    --radius:     12px;
+    --r-sm:       8px;
+    --font-ui:    'Outfit', sans-serif;
+    --font-mono:  'JetBrains Mono', monospace;
+    --tr: all 0.2s ease;
+  }
+
+  * { margin:0; padding:0; box-sizing:border-box; }
+
+  body {
+    font-family: var(--font-ui);
+    background: var(--bg-base);
+    color: var(--text-primary);
+    min-height: 100vh;
+  }
+
+  body::before {
+    content:''; position:fixed; inset:0;
+    background-image:
+      linear-gradient(rgba(168,85,247,0.02) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(168,85,247,0.02) 1px, transparent 1px);
+    background-size: 48px 48px;
+    pointer-events:none; z-index:0;
+  }
+
+  /* ── TOPBAR ─────────────────────────────────────── */
+  .topbar {
+    position:fixed; top:0; left:0; right:0; height:58px;
+    background: rgba(7,8,15,0.94);
+    backdrop-filter: blur(20px);
+    border-bottom: 1px solid var(--border);
+    display:flex; align-items:center;
+    padding:0 20px; gap:14px; z-index:100;
+  }
+
+  .logo { display:flex; align-items:center; gap:9px; text-decoration:none; flex-shrink:0; }
+
+  .logo-icon {
+    width:32px; height:32px;
+    background: linear-gradient(135deg, var(--purple), var(--violet));
+    border-radius:8px; display:flex; align-items:center; justify-content:center;
+    font-size:12px; font-weight:900; color:#fff;
+    box-shadow:0 0 16px rgba(168,85,247,.3);
+  }
+
+  .logo-text { font-weight:900; font-size:16px; color:var(--text-primary); letter-spacing:-.5px; }
+  .logo-text span { color:var(--purple); }
+
+  .admin-tag {
+    background: rgba(168,85,247,.12); border:1px solid rgba(168,85,247,.3);
+    color:var(--purple); font-family:var(--font-mono); font-size:8px;
+    letter-spacing:2px; padding:3px 9px; border-radius:20px; flex-shrink:0;
+  }
+
+  .topbar-search {
+    flex:1; max-width:360px; margin-left:8px; position:relative;
+  }
+  .topbar-search i { position:absolute; left:10px; top:50%; transform:translateY(-50%); color:var(--text-muted); }
+  .topbar-search input {
+    width:100%; background:rgba(255,255,255,.04); border:1px solid var(--border);
+    border-radius:var(--r-sm); padding:7px 12px 7px 32px;
+    color:var(--text-primary); font-family:var(--font-ui); font-size:12px; outline:none;
+    transition:var(--tr);
+  }
+  .topbar-search input::placeholder { color:var(--text-muted); }
+  .topbar-search input:focus { border-color:var(--border-act); box-shadow:0 0 0 2px rgba(168,85,247,.1); }
+
+  .topbar-right { margin-left:auto; display:flex; align-items:center; gap:8px; }
+
+  .topbar-btn {
+    background:rgba(255,255,255,.04); border:1px solid var(--border);
+    color:var(--text-secondary); cursor:pointer; padding:6px 12px;
+    border-radius:var(--r-sm); font-size:12px; font-family:var(--font-ui);
+    font-weight:500; transition:var(--tr); text-decoration:none;
+    display:flex; align-items:center; gap:6px;
+  }
+  .topbar-btn:hover { background:rgba(255,255,255,.07); color:var(--text-primary); }
+
+  .topbar-ico-btn {
+    width:34px; height:34px; background:rgba(255,255,255,.03);
+    border:1px solid var(--border); border-radius:var(--r-sm);
+    color:var(--text-secondary); cursor:pointer;
+    display:flex; align-items:center; justify-content:center;
+    transition:var(--tr); position:relative;
+  }
+  .topbar-ico-btn:hover { background:var(--purple-soft); color:var(--purple); border-color:var(--border-act); }
+
+  .notif-dot {
+    position:absolute; top:-3px; right:-3px;
+    width:15px; height:15px; background:var(--red); border-radius:50%;
+    border:2px solid var(--bg-base); font-size:8px; font-weight:700; color:#fff;
+    display:flex; align-items:center; justify-content:center; font-family:var(--font-mono);
+  }
+
+  .user-chip {
+    display:flex; align-items:center; gap:8px;
+    background:rgba(255,255,255,.03); border:1px solid var(--border);
+    padding:4px 10px 4px 4px; border-radius:100px; cursor:pointer; transition:var(--tr);
+  }
+  .user-chip:hover { border-color:var(--border-act); }
+
+  .user-ava {
+    width:26px; height:26px;
+    background:linear-gradient(135deg, var(--purple), var(--violet));
+    border-radius:50%; display:flex; align-items:center; justify-content:center;
+    font-size:10px; font-weight:700; color:#fff;
+  }
+
+  .user-chip-name { font-size:12px; font-weight:600; color:var(--text-primary); }
+
+  .btn-primary {
+    background:linear-gradient(135deg, var(--purple), var(--violet));
+    color:#fff; border:none; border-radius:var(--r-sm);
+    padding:7px 14px; font-size:12px; font-weight:700;
+    cursor:pointer; font-family:var(--font-ui);
+    display:flex; align-items:center; gap:6px;
+    transition:var(--tr); white-space:nowrap;
+  }
+  .btn-primary:hover { opacity:.85; box-shadow:var(--glow-p); transform:translateY(-1px); }
+
+  /* ── SIDEBAR ─────────────────────────────────────── */
+  .sidebar {
+    position:fixed; top:58px; left:0; bottom:0; width:218px;
+    background:var(--bg-sidebar); border-right:1px solid var(--border);
+    padding:14px 10px; display:flex; flex-direction:column; z-index:90;
+  }
+
+  .sidebar-prof {
+    background:rgba(168,85,247,.06); border:1px solid rgba(168,85,247,.12);
+    border-radius:var(--radius); padding:12px; margin-bottom:18px;
+    display:flex; align-items:center; gap:10px;
+  }
+
+  .prof-ava {
+    width:36px; height:36px; flex-shrink:0;
+    background:linear-gradient(135deg, var(--purple), var(--violet));
+    border-radius:10px; display:flex; align-items:center; justify-content:center;
+    font-size:14px; font-weight:700; color:#fff;
+    box-shadow:0 0 12px rgba(168,85,247,.3);
+  }
+
+  .prof-name { font-size:13px; font-weight:700; color:var(--text-primary); }
+  .prof-role { font-size:9px; color:var(--purple); font-family:var(--font-mono); letter-spacing:.5px; }
+
+  .sb-section {
+    padding:3px 10px; font-family:var(--font-mono); font-size:8px;
+    letter-spacing:2px; color:var(--text-muted); text-transform:uppercase;
+    margin-bottom:3px; margin-top:10px;
+  }
+
+  .sidebar-item {
+    display:flex; align-items:center; gap:9px; padding:8px 10px;
+    border-radius:var(--r-sm); cursor:pointer; font-size:13px; font-weight:500;
+    color:var(--text-secondary); transition:var(--tr); text-decoration:none;
+    position:relative; border:none; background:none; width:100%; text-align:left;
+    font-family:var(--font-ui);
+  }
+  .sidebar-item:hover { background:rgba(168,85,247,.06); color:var(--text-primary); }
+  .sidebar-item.active { background:rgba(168,85,247,.1); color:var(--purple); }
+  .sidebar-item.active::before {
+    content:''; position:absolute; left:0; top:25%; bottom:25%; width:3px;
+    background:var(--purple); border-radius:0 3px 3px 0;
+    box-shadow:0 0 8px rgba(168,85,247,.5);
+  }
+
+  .sb-badge {
+    margin-left:auto; min-width:18px; height:18px;
+    background:rgba(255,77,106,.15); color:var(--red);
+    border-radius:9px; font-size:9px; font-weight:700;
+    font-family:var(--font-mono); padding:0 5px;
+    display:flex; align-items:center; justify-content:center;
+  }
+
+  /* ── MAIN ─────────────────────────────────────────── */
+  .main { margin-left:218px; margin-top:58px; padding:28px 30px; position:relative; z-index:1; }
+
+  .page-head { margin-bottom:22px; }
+  .page-head-row { display:flex; align-items:center; justify-content:space-between; margin-bottom:22px; }
+
+  .page-tag {
+    font-family:var(--font-mono); font-size:9px; letter-spacing:2px;
+    color:var(--purple); margin-bottom:5px;
+  }
+  .page-tag::before { content:'// '; opacity:.5; }
+
+  .page-h1 { font-size:24px; font-weight:900; letter-spacing:-.5px; }
+  .page-sub { color:var(--text-secondary); font-size:13px; margin-top:4px; }
+
+  /* views */
+  .view { display:none; }
+  .view.active { display:block; }
+
+  /* ── STATS ROW ───────────────────────────────────── */
+  .stats-row { display:grid; grid-template-columns:repeat(4,1fr); gap:14px; margin-bottom:24px; }
+
+  .stat-card {
+    background:var(--bg-card); border:1px solid var(--border);
+    border-radius:var(--radius); padding:18px 20px;
+    position:relative; overflow:hidden; transition:border-color .2s;
+    animation: fadeInUp .4s ease both;
+  }
+  .stat-card:hover { border-color:var(--border-act); }
+  .stat-card::before {
+    content:''; position:absolute; top:0; left:0; right:0; height:2px;
+    background:linear-gradient(90deg, var(--purple), var(--cyan));
+  }
+  .stat-card:nth-child(1){animation-delay:.05s}
+  .stat-card:nth-child(2){animation-delay:.10s}
+  .stat-card:nth-child(3){animation-delay:.15s}
+  .stat-card:nth-child(4){animation-delay:.20s}
+
+  .sc-top { display:flex; align-items:flex-start; justify-content:space-between; margin-bottom:12px; }
+
+  .sc-ico {
+    width:34px; height:34px;
+    background:rgba(168,85,247,.1); border:1px solid rgba(168,85,247,.15);
+    border-radius:var(--r-sm); display:flex; align-items:center; justify-content:center;
+    color:var(--purple);
+  }
+
+  .stat-label { font-size:10px; color:var(--text-muted); letter-spacing:.5px; text-transform:uppercase; }
+  .stat-val   { font-family:var(--font-mono); font-size:28px; font-weight:700; color:var(--text-primary); line-height:1; margin-bottom:6px; }
+  .stat-change { font-size:11px; color:var(--green); display:flex; align-items:center; gap:4px; }
+  .stat-change.warn { color:var(--amber); }
+
+  /* ── TABLE ───────────────────────────────────────── */
+  .table-wrap { background:var(--bg-card); border:1px solid var(--border); border-radius:var(--radius); overflow:hidden; }
+
+  .table-header {
+    padding:13px 18px; border-bottom:1px solid var(--border);
+    display:flex; align-items:center; justify-content:space-between; gap:12px;
+  }
+
+  .table-title { font-size:14px; font-weight:700; display:flex; align-items:center; gap:8px; }
+  .table-actions { display:flex; gap:8px; align-items:center; }
+
+  .tbl-search-wrap { position:relative; display:flex; align-items:center; }
+  .tbl-search-wrap i { position:absolute; left:9px; color:var(--text-muted); }
+
+  .tbl-search {
+    background:rgba(255,255,255,.04); border:1px solid var(--border);
+    border-radius:var(--r-sm); padding:6px 10px 6px 28px;
+    color:var(--text-primary); font-size:12px; outline:none;
+    font-family:var(--font-ui); transition:var(--tr); width:180px;
+  }
+  .tbl-search:focus { border-color:var(--border-act); }
+  .tbl-search::placeholder { color:var(--text-muted); }
+
+  table { width:100%; border-collapse:collapse; }
+
+  th {
+    padding:10px 18px; text-align:left; font-family:var(--font-mono); font-size:8px;
+    letter-spacing:2px; color:var(--text-muted); text-transform:uppercase;
+    background:rgba(255,255,255,.015); border-bottom:1px solid var(--border);
+  }
+
+  td {
+    padding:12px 18px; font-size:13px;
+    border-bottom:1px solid rgba(255,255,255,.025);
+    vertical-align:middle;
+  }
+
+  tr:last-child td { border-bottom:none; }
+  tr:hover td { background:rgba(168,85,247,.03); }
+
+  .badge {
+    display:inline-flex; align-items:center; gap:3px;
+    padding:3px 8px; border-radius:8px;
+    font-size:9px; font-family:var(--font-mono); letter-spacing:.5px; font-weight:700;
+  }
+  .badge-green  { background:rgba(57,255,110,.12);  color:var(--green);  border:1px solid rgba(57,255,110,.25); }
+  .badge-amber  { background:rgba(255,184,0,.12);   color:var(--amber);  border:1px solid rgba(255,184,0,.25); }
+  .badge-red    { background:rgba(255,77,106,.12);  color:var(--red);    border:1px solid rgba(255,77,106,.25); }
+  .badge-cyan   { background:rgba(0,229,255,.08);   color:var(--cyan);   border:1px solid rgba(0,229,255,.18); }
+  .badge-purple { background:rgba(168,85,247,.1);   color:var(--purple); border:1px solid rgba(168,85,247,.25); }
+
+  .tbl-btn {
+    background:rgba(255,255,255,.04); border:1px solid var(--border);
+    border-radius:6px; padding:4px 10px; font-size:11px;
+    color:var(--text-secondary); cursor:pointer; font-family:var(--font-ui);
+    transition:var(--tr); margin-right:4px;
+    display:inline-flex; align-items:center; gap:4px;
+  }
+  .tbl-btn:hover { border-color:var(--border-act); color:var(--purple); background:var(--purple-soft); }
+  .tbl-btn.danger:hover { border-color:rgba(255,77,106,.4); color:var(--red); background:rgba(255,77,106,.08); }
+
+  .progress-mini { height:4px; background:rgba(255,255,255,.06); border-radius:4px; overflow:hidden; width:80px; display:inline-block; vertical-align:middle; margin-right:6px; }
+  .progress-mini-fill { height:100%; background:linear-gradient(90deg, var(--purple), var(--cyan)); border-radius:4px; }
+
+  .stu-cell { display:flex; align-items:center; gap:10px; }
+  .stu-ava  { width:30px; height:30px; border-radius:8px; display:flex; align-items:center; justify-content:center; font-size:11px; font-weight:700; flex-shrink:0; }
+
+  /* ── FORMS ───────────────────────────────────────── */
+  .form-grid { display:grid; grid-template-columns:1fr 1fr; gap:16px; }
+  .form-group { display:flex; flex-direction:column; gap:6px; }
+  .form-group.full { grid-column:1/-1; }
+
+  label { font-size:10px; font-family:var(--font-mono); color:var(--text-secondary); letter-spacing:1px; text-transform:uppercase; }
+
+  input[type=text], input[type=number], textarea, select {
+    background:rgba(255,255,255,.04); border:1px solid var(--border);
+    border-radius:var(--r-sm); padding:9px 12px;
+    color:var(--text-primary); font-family:var(--font-ui); font-size:13px;
+    outline:none; transition:var(--tr); width:100%;
+  }
+  input:focus, textarea:focus, select:focus { border-color:var(--border-act); box-shadow:0 0 0 2px rgba(168,85,247,.1); }
+  input::placeholder, textarea::placeholder { color:var(--text-muted); }
+  textarea { resize:vertical; min-height:88px; }
+  select option { background:#0d0f1d; }
+
+  .form-actions {
+    display:flex; gap:8px; justify-content:flex-end;
+    margin-top:18px; padding-top:16px; border-top:1px solid var(--border);
+  }
+
+  .btn-secondary {
+    background:rgba(255,255,255,.04); border:1px solid var(--border);
+    border-radius:var(--r-sm); padding:8px 18px; font-size:12px;
+    color:var(--text-secondary); cursor:pointer; font-family:var(--font-ui); transition:var(--tr);
+  }
+  .btn-secondary:hover { background:rgba(255,255,255,.08); color:var(--text-primary); }
+
+  /* ── MODULE BUILDER ──────────────────────────────── */
+  .module-list { display:flex; flex-direction:column; gap:8px; margin-bottom:10px; }
+
+  .module-item {
+    background:rgba(168,85,247,.06); border:1px solid rgba(168,85,247,.14);
+    border-radius:10px; padding:12px 14px;
+    display:flex; align-items:center; gap:10px; transition:var(--tr);
+  }
+  .module-item:hover { border-color:rgba(168,85,247,.3); }
+
+  .module-drag { color:var(--text-muted); cursor:grab; }
+
+  .module-num {
+    font-family:var(--font-mono); font-size:10px; color:var(--purple);
+    min-width:28px; background:rgba(168,85,247,.1); padding:2px 6px; border-radius:4px;
+  }
+
+  .module-info { flex:1; }
+  .module-name { font-size:13px; font-weight:600; margin-bottom:3px; }
+  .module-meta { font-size:10px; color:var(--text-muted); font-family:var(--font-mono); display:flex; gap:10px; }
+  .module-actions { display:flex; gap:4px; }
+
+  .icon-btn {
+    width:28px; height:28px; border-radius:6px; border:1px solid var(--border);
+    background:none; color:var(--text-secondary); cursor:pointer;
+    display:flex; align-items:center; justify-content:center; transition:var(--tr);
+  }
+  .icon-btn:hover { border-color:var(--border-act); color:var(--text-primary); }
+  .icon-btn.del:hover { border-color:rgba(255,77,106,.4); color:var(--red); }
+
+  .add-module-btn {
+    border:1px dashed rgba(168,85,247,.25); border-radius:10px; padding:10px;
+    text-align:center; font-size:12px; color:var(--text-muted); cursor:pointer;
+    transition:var(--tr); background:none; width:100%; font-family:var(--font-ui);
+    display:flex; align-items:center; justify-content:center; gap:6px;
+  }
+  .add-module-btn:hover { border-color:var(--purple); color:var(--purple); background:var(--purple-soft); }
+
+  /* ── MODAL ───────────────────────────────────────── */
+  .modal-overlay {
+    position:fixed; inset:0; background:rgba(7,8,15,.9);
+    backdrop-filter:blur(10px); z-index:200;
+    display:flex; align-items:center; justify-content:center;
+    opacity:0; pointer-events:none; transition:opacity .25s;
+  }
+  .modal-overlay.open { opacity:1; pointer-events:all; }
+
+  .modal {
+    background:#0d0f1d; border:1px solid var(--border-act);
+    border-radius:16px; width:90%; max-width:580px;
+    max-height:88vh; overflow-y:auto; padding:26px;
+    box-shadow:0 40px 80px rgba(0,0,0,.6), var(--glow-p);
+    transform:translateY(16px) scale(.98); transition:transform .25s; position:relative;
+  }
+  .modal-overlay.open .modal { transform:none; }
+
+  .modal-top { display:flex; align-items:flex-start; justify-content:space-between; margin-bottom:20px; }
+
+  .modal-ico {
+    width:36px; height:36px;
+    background:linear-gradient(135deg, var(--purple), var(--violet));
+    border-radius:var(--r-sm); display:flex; align-items:center; justify-content:center;
+    color:#fff; margin-right:12px; flex-shrink:0; box-shadow:0 0 12px rgba(168,85,247,.3);
+  }
+
+  .modal-title { font-size:17px; font-weight:800; }
+  .modal-sub   { font-size:10px; color:var(--text-muted); font-family:var(--font-mono); margin-top:3px; }
+
+  .modal-close {
+    background:none; border:none; color:var(--text-muted); cursor:pointer;
+    width:28px; height:28px; border-radius:6px; transition:var(--tr);
+    display:flex; align-items:center; justify-content:center; flex-shrink:0;
+  }
+  .modal-close:hover { background:rgba(255,255,255,.08); color:var(--text-primary); }
+
+  /* ── TOAST ───────────────────────────────────────── */
+  .toast {
+    position:fixed; bottom:24px; right:24px;
+    background:#0e1026; border:1px solid var(--purple);
+    border-radius:10px; padding:11px 16px;
+    display:flex; align-items:center; gap:10px;
+    font-size:13px; box-shadow:var(--glow-p); z-index:300;
+    transform:translateY(80px); opacity:0;
+    transition:all .3s cubic-bezier(.2,.8,.2,1); max-width:340px;
+  }
+  .toast.show { transform:none; opacity:1; }
+
+  .toast-ico {
+    width:24px; height:24px; background:var(--purple-soft);
+    border-radius:6px; color:var(--purple);
+    display:flex; align-items:center; justify-content:center; flex-shrink:0;
+  }
+
+  /* ── EMPTY STATE ─────────────────────────────────── */
+  .empty-state { padding:52px; text-align:center; color:var(--text-muted); }
+  .empty-icon {
+    width:56px; height:56px; background:rgba(168,85,247,.06);
+    border:1px solid rgba(168,85,247,.12); border-radius:14px;
+    margin:0 auto 14px; display:flex; align-items:center; justify-content:center; color:var(--purple);
+  }
+  .empty-title { font-size:15px; font-weight:700; color:var(--text-secondary); margin-bottom:6px; }
+  .empty-sub   { font-size:12px; line-height:1.6; }
+
+  /* ── MISC ────────────────────────────────────────── */
+  ::-webkit-scrollbar { width:5px; }
+  ::-webkit-scrollbar-track { background:transparent; }
+  ::-webkit-scrollbar-thumb { background:rgba(168,85,247,.2); border-radius:3px; }
+
+  @keyframes fadeInUp { from{opacity:0;transform:translateY(10px)} to{opacity:1;transform:translateY(0)} }
+</style>
+</head>
+<body>
+
+<!-- ══════════════════════════════════════════════════
+     TOPBAR
+══════════════════════════════════════════════════ -->
+<header class="topbar">
+  <a class="logo" href="#">
+    <div class="logo-icon">CG</div>
+    <span class="logo-text">Ciber<span>GenIA</span></span>
+  </a>
+  <span class="admin-tag">ADMIN</span>
+
+  <div class="topbar-search">
+    <i data-lucide="search" size="13"></i>
+    <input type="text" placeholder="Buscar cursos, alumnos…">
+  </div>
+
+  <div class="topbar-right">
+    <a class="topbar-btn" href="Templates.html">
+      <i data-lucide="arrow-left" size="13"></i>
+      Vista alumno
+    </a>
+    <button class="topbar-ico-btn" title="Notificaciones">
+      <i data-lucide="bell" size="15"></i>
+      <span class="notif-dot">3</span>
+    </button>
+    <button class="topbar-ico-btn" title="Anuncios">
+      <i data-lucide="megaphone" size="15"></i>
+    </button>
+    <div class="user-chip">
+      <div class="user-ava">PR</div>
+      <span class="user-chip-name">Profesor</span>
+    </div>
+    <button class="btn-primary" onclick="openModal('course')">
+      <i data-lucide="plus" size="13"></i>
+      Nuevo Curso
+    </button>
+  </div>
+</header>
+
+<!-- ══════════════════════════════════════════════════
+     SIDEBAR
+══════════════════════════════════════════════════ -->
+<aside class="sidebar">
+  <div class="sidebar-prof">
+    <div class="prof-ava">PR</div>
+    <div>
+      <div class="prof-name">Profesor Admin</div>
+      <div class="prof-role">// ADMINISTRADOR</div>
+    </div>
+  </div>
+
+  <div class="sb-section">Pizarrón</div>
+  <button class="sidebar-item active" onclick="showView('dashboard',this)">
+    <i data-lucide="layout-dashboard" size="15"></i> Dashboard
+  </button>
+  <button class="sidebar-item" onclick="showView('courses',this)">
+    <i data-lucide="book-open" size="15"></i> Cursos
+  </button>
+  <button class="sidebar-item" onclick="showView('activities',this)">
+    <i data-lucide="clipboard-list" size="15"></i> Actividades
+    <span class="sb-badge">37</span>
+  </button>
+  <button class="sidebar-item" onclick="showView('students',this)">
+    <i data-lucide="users" size="15"></i> Alumnos
+  </button>
+  <button class="sidebar-item" onclick="showView('grades',this)">
+    <i data-lucide="bar-chart-2" size="15"></i> Calificaciones
+  </button>
+
+  <div class="sb-section">Sistema</div>
+  <button class="sidebar-item" onclick="showView('settings',this)">
+    <i data-lucide="settings" size="15"></i> Ajustes
+  </button>
+</aside>
+
+<!-- ══════════════════════════════════════════════════
+     MAIN
+══════════════════════════════════════════════════ -->
+<main class="main">
+
+  <!-- ── DASHBOARD ─────────────────────────────────── -->
+  <div class="view active" id="view-dashboard">
+    <div class="page-head">
+      <div class="page-tag">RESUMEN GENERAL</div>
+      <h1 class="page-h1">Panel de Administración</h1>
+      <p class="page-sub">Bienvenido, Profesor. Estado actual de la plataforma CiberGenIA.</p>
+    </div>
+
+    <div class="stats-row">
+      <div class="stat-card">
+        <div class="sc-top">
+          <div><div class="stat-label">Cursos Activos</div></div>
+          <div class="sc-ico"><i data-lucide="book-open" size="16"></i></div>
+        </div>
+        <div class="stat-val">12</div>
+        <div class="stat-change"><i data-lucide="trending-up" size="11"></i> +2 este mes</div>
+      </div>
+      <div class="stat-card">
+        <div class="sc-top">
+          <div><div class="stat-label">Alumnos Matriculados</div></div>
+          <div class="sc-ico" style="background:rgba(0,229,255,.08);border-color:rgba(0,229,255,.15);color:var(--cyan)"><i data-lucide="users" size="16"></i></div>
+        </div>
+        <div class="stat-val">248</div>
+        <div class="stat-change"><i data-lucide="trending-up" size="11"></i> +34 nuevos</div>
+      </div>
+      <div class="stat-card">
+        <div class="sc-top">
+          <div><div class="stat-label">Actividades Pendientes</div></div>
+          <div class="sc-ico" style="background:rgba(255,184,0,.08);border-color:rgba(255,184,0,.15);color:var(--amber)"><i data-lucide="clock" size="16"></i></div>
+        </div>
+        <div class="stat-val">37</div>
+        <div class="stat-change warn"><i data-lucide="alert-triangle" size="11"></i> Por revisar</div>
+      </div>
+      <div class="stat-card">
+        <div class="sc-top">
+          <div><div class="stat-label">Promedio General</div></div>
+          <div class="sc-ico" style="background:rgba(57,255,110,.08);border-color:rgba(57,255,110,.15);color:var(--green)"><i data-lucide="percent" size="16"></i></div>
+        </div>
+        <div class="stat-val">83%</div>
+        <div class="stat-change"><i data-lucide="trending-up" size="11"></i> +2.4% vs periodo ant.</div>
+      </div>
+    </div>
+
+    <div class="table-wrap">
+      <div class="table-header">
+        <span class="table-title">
+          <i data-lucide="activity" size="15" style="color:var(--purple)"></i>
+          Actividad Reciente
+        </span>
+      </div>
+      <table>
+        <thead><tr><th>Alumno</th><th>Acción</th><th>Curso</th><th>Resultado</th><th>Hora</th></tr></thead>
+        <tbody>
+          <tr>
+            <td><div class="stu-cell"><div class="stu-ava" style="background:linear-gradient(135deg,#1a3a5c,#0a1e35);border:1.5px solid rgba(0,229,255,.3);color:var(--cyan)">YH</div><strong>Yahir H.</strong></div></td>
+            <td style="color:var(--text-secondary)">Completó examen final</td><td>Ethical Hacker</td>
+            <td><span class="badge badge-green">98%</span></td>
+            <td style="color:var(--text-muted);font-family:var(--font-mono);font-size:11px">Hace 2h</td>
+          </tr>
+          <tr>
+            <td><div class="stu-cell"><div class="stu-ava" style="background:linear-gradient(135deg,#1a2a3c,#0a1525);border:1.5px solid rgba(168,85,247,.3);color:var(--purple)">ML</div><strong>María L.</strong></div></td>
+            <td style="color:var(--text-secondary)">Entregó laboratorio</td><td>CCNA Redes</td>
+            <td><span class="badge badge-cyan">Pendiente</span></td>
+            <td style="color:var(--text-muted);font-family:var(--font-mono);font-size:11px">Hace 3h</td>
+          </tr>
+          <tr>
+            <td><div class="stu-cell"><div class="stu-ava" style="background:linear-gradient(135deg,#1a1510,#0a0c08);border:1.5px solid rgba(255,184,0,.3);color:var(--amber)">CM</div><strong>Carlos M.</strong></div></td>
+            <td style="color:var(--text-secondary)">Inició módulo</td><td>HTML Essentials</td>
+            <td><span class="badge badge-amber">En curso</span></td>
+            <td style="color:var(--text-muted);font-family:var(--font-mono);font-size:11px">Hace 4h</td>
+          </tr>
+          <tr>
+            <td><div class="stu-cell"><div class="stu-ava" style="background:linear-gradient(135deg,#1a1015,#0a0810);border:1.5px solid rgba(255,77,106,.3);color:var(--red)">AR</div><strong>Ana R.</strong></div></td>
+            <td style="color:var(--text-secondary)">Completó quiz</td><td>Ciencia de Datos</td>
+            <td><span class="badge badge-red">62%</span></td>
+            <td style="color:var(--text-muted);font-family:var(--font-mono);font-size:11px">Hace 5h</td>
+          </tr>
+          <tr>
+            <td><div class="stu-cell"><div class="stu-ava" style="background:linear-gradient(135deg,#0f1a10,#080c08);border:1.5px solid rgba(57,255,110,.3);color:var(--green)">LP</div><strong>Luis P.</strong></div></td>
+            <td style="color:var(--text-secondary)">Se matriculó</td><td>CyberOps Associate</td>
+            <td><span class="badge badge-purple">Nuevo</span></td>
+            <td style="color:var(--text-muted);font-family:var(--font-mono);font-size:11px">Hace 6h</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ── CURSOS ─────────────────────────────────────── -->
+  <div class="view" id="view-courses">
+    <div class="page-head-row">
+      <div>
+        <div class="page-tag">GESTIÓN</div>
+        <h1 class="page-h1">Cursos</h1>
+      </div>
+      <button class="btn-primary" onclick="openModal('course')"><i data-lucide="plus" size="13"></i> Nuevo Curso</button>
+    </div>
+
+    <div class="table-wrap">
+      <div class="table-header">
+        <span class="table-title"><i data-lucide="book-open" size="15" style="color:var(--purple)"></i> Todos los cursos</span>
+        <div class="table-actions">
+          <div class="tbl-search-wrap">
+            <i data-lucide="search" size="12"></i>
+            <input class="tbl-search" type="text" placeholder="Buscar…" id="courseSearch" oninput="searchTable('courseSearch','courseTable')">
+          </div>
+        </div>
+      </div>
+      <table id="courseTable">
+        <thead><tr><th>Nombre del curso</th><th>Categoría</th><th>Nivel</th><th>Alumnos</th><th>Progreso prom.</th><th>Estado</th><th>Acciones</th></tr></thead>
+        <tbody id="courseTableBody">
+          <tr>
+            <td><strong>CyberOps Associate</strong></td>
+            <td style="color:var(--text-secondary)">Ciberseguridad</td>
+            <td><span class="badge badge-amber">INTERMEDIO</span></td><td>45</td>
+            <td><div class="progress-mini"><div class="progress-mini-fill" style="width:72%"></div></div><span style="font-family:var(--font-mono);font-size:10px;color:var(--text-secondary)">72%</span></td>
+            <td><span class="badge badge-green">ACTIVO</span></td>
+            <td>
+              <button class="tbl-btn" onclick="editCourse('CyberOps Associate')"><i data-lucide="pencil" size="11"></i> Editar</button>
+              <button class="tbl-btn" onclick="openModal('module')"><i data-lucide="layers" size="11"></i> Módulos</button>
+              <button class="tbl-btn danger" onclick="confirmDelete('curso')"><i data-lucide="trash-2" size="11"></i></button>
+            </td>
+          </tr>
+          <tr>
+            <td><strong>HTML Essentials</strong></td>
+            <td style="color:var(--text-secondary)">Desarrollo Web</td>
+            <td><span class="badge badge-green">PRINCIPIANTE</span></td><td>62</td>
+            <td><div class="progress-mini"><div class="progress-mini-fill" style="width:45%"></div></div><span style="font-family:var(--font-mono);font-size:10px;color:var(--text-secondary)">45%</span></td>
+            <td><span class="badge badge-green">ACTIVO</span></td>
+            <td>
+              <button class="tbl-btn" onclick="editCourse('HTML Essentials')"><i data-lucide="pencil" size="11"></i> Editar</button>
+              <button class="tbl-btn" onclick="openModal('module')"><i data-lucide="layers" size="11"></i> Módulos</button>
+              <button class="tbl-btn danger" onclick="confirmDelete('curso')"><i data-lucide="trash-2" size="11"></i></button>
+            </td>
+          </tr>
+          <tr>
+            <td><strong>CCNA: Intro a Redes</strong></td>
+            <td style="color:var(--text-secondary)">Redes</td>
+            <td><span class="badge badge-red">AVANZADO</span></td><td>38</td>
+            <td><div class="progress-mini"><div class="progress-mini-fill" style="width:90%"></div></div><span style="font-family:var(--font-mono);font-size:10px;color:var(--text-secondary)">90%</span></td>
+            <td><span class="badge badge-amber">CERRANDO</span></td>
+            <td>
+              <button class="tbl-btn" onclick="editCourse('CCNA')"><i data-lucide="pencil" size="11"></i> Editar</button>
+              <button class="tbl-btn" onclick="openModal('module')"><i data-lucide="layers" size="11"></i> Módulos</button>
+              <button class="tbl-btn danger" onclick="confirmDelete('curso')"><i data-lucide="trash-2" size="11"></i></button>
+            </td>
+          </tr>
+          <tr>
+            <td><strong>Intro a la Ciencia de Datos</strong></td>
+            <td style="color:var(--text-secondary)">Datos</td>
+            <td><span class="badge badge-green">PRINCIPIANTE</span></td><td>51</td>
+            <td><div class="progress-mini"><div class="progress-mini-fill" style="width:20%"></div></div><span style="font-family:var(--font-mono);font-size:10px;color:var(--text-secondary)">20%</span></td>
+            <td><span class="badge badge-green">ACTIVO</span></td>
+            <td>
+              <button class="tbl-btn" onclick="editCourse('Ciencia de Datos')"><i data-lucide="pencil" size="11"></i> Editar</button>
+              <button class="tbl-btn" onclick="openModal('module')"><i data-lucide="layers" size="11"></i> Módulos</button>
+              <button class="tbl-btn danger" onclick="confirmDelete('curso')"><i data-lucide="trash-2" size="11"></i></button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ── ACTIVIDADES ────────────────────────────────── -->
+  <div class="view" id="view-activities">
+    <div class="page-head-row">
+      <div>
+        <div class="page-tag">CONTENIDO</div>
+        <h1 class="page-h1">Actividades y Evaluaciones</h1>
+      </div>
+      <button class="btn-primary" onclick="openModal('activity')"><i data-lucide="plus" size="13"></i> Nueva Actividad</button>
+    </div>
+    <div class="table-wrap">
+      <div class="table-header">
+        <span class="table-title"><i data-lucide="clipboard-list" size="15" style="color:var(--purple)"></i> Actividades registradas</span>
+      </div>
+      <table>
+        <thead><tr><th>Actividad</th><th>Tipo</th><th>Curso</th><th>Módulo</th><th>Puntaje</th><th>Fecha límite</th><th>Acciones</th></tr></thead>
+        <tbody>
+          <tr>
+            <td><strong>Course Final Exam</strong></td><td><span class="badge badge-red">EXAMEN</span></td>
+            <td>Ethical Hacker</td><td>Final</td><td>100 pts</td>
+            <td style="font-family:var(--font-mono);font-size:11px;color:var(--text-secondary)">2026-05-19</td>
+            <td>
+              <button class="tbl-btn" onclick="openModal('activity')"><i data-lucide="pencil" size="11"></i> Editar</button>
+              <button class="tbl-btn danger" onclick="confirmDelete('actividad')"><i data-lucide="trash-2" size="11"></i></button>
+            </td>
+          </tr>
+          <tr>
+            <td><strong>Lab 4 — Subnetting</strong></td><td><span class="badge badge-cyan">LAB</span></td>
+            <td>CCNA: Redes</td><td>Módulo 4</td><td>50 pts</td>
+            <td style="font-family:var(--font-mono);font-size:11px;color:var(--text-secondary)">2026-05-21</td>
+            <td>
+              <button class="tbl-btn" onclick="openModal('activity')"><i data-lucide="pencil" size="11"></i> Editar</button>
+              <button class="tbl-btn danger" onclick="confirmDelete('actividad')"><i data-lucide="trash-2" size="11"></i></button>
+            </td>
+          </tr>
+          <tr>
+            <td><strong>Quiz — Tipos de datos</strong></td><td><span class="badge badge-amber">QUIZ</span></td>
+            <td>Ciencia de Datos</td><td>Módulo 2</td><td>25 pts</td>
+            <td style="font-family:var(--font-mono);font-size:11px;color:var(--text-secondary)">2026-05-24</td>
+            <td>
+              <button class="tbl-btn" onclick="openModal('activity')"><i data-lucide="pencil" size="11"></i> Editar</button>
+              <button class="tbl-btn danger" onclick="confirmDelete('actividad')"><i data-lucide="trash-2" size="11"></i></button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ── ALUMNOS ────────────────────────────────────── -->
+  <div class="view" id="view-students">
+    <div class="page-head-row">
+      <div>
+        <div class="page-tag">USUARIOS</div>
+        <h1 class="page-h1">Gestión de Alumnos</h1>
+      </div>
+      <button class="btn-primary" onclick="openModal('student')"><i data-lucide="user-plus" size="13"></i> Agregar Alumno</button>
+    </div>
+    <div class="table-wrap">
+      <div class="table-header">
+        <span class="table-title"><i data-lucide="users" size="15" style="color:var(--purple)"></i> Alumnos matriculados</span>
+        <div class="table-actions">
+          <div class="tbl-search-wrap">
+            <i data-lucide="search" size="12"></i>
+            <input class="tbl-search" type="text" placeholder="Buscar alumno…" style="width:200px">
+          </div>
+        </div>
+      </div>
+      <table>
+        <thead><tr><th>Nombre</th><th>Matrícula</th><th>Cursos</th><th>Promedio</th><th>Último acceso</th><th>Estado</th><th>Acciones</th></tr></thead>
+        <tbody>
+          <tr>
+            <td><div class="stu-cell"><div class="stu-ava" style="background:linear-gradient(135deg,#1a3a5c,#0a1e35);border:1.5px solid rgba(0,229,255,.3);color:var(--cyan)">YH</div><strong>Yahir Hernández</strong></div></td>
+            <td style="font-family:var(--font-mono);font-size:11px;color:var(--text-secondary)">ITT2024001</td>
+            <td>4</td><td><span style="font-family:var(--font-mono);color:var(--green)">87%</span></td>
+            <td style="font-family:var(--font-mono);font-size:11px;color:var(--text-muted)">Hoy, 14:32</td>
+            <td><span class="badge badge-green">ACTIVO</span></td>
+            <td>
+              <button class="tbl-btn" onclick="showToast('Perfil — próximamente')"><i data-lucide="user" size="11"></i> Ver perfil</button>
+              <button class="tbl-btn danger" onclick="confirmDelete('alumno')"><i data-lucide="trash-2" size="11"></i></button>
+            </td>
+          </tr>
+          <tr>
+            <td><div class="stu-cell"><div class="stu-ava" style="background:linear-gradient(135deg,#1a2a3c,#0a1525);border:1.5px solid rgba(168,85,247,.3);color:var(--purple)">ML</div><strong>María López</strong></div></td>
+            <td style="font-family:var(--font-mono);font-size:11px;color:var(--text-secondary)">ITT2024002</td>
+            <td>3</td><td><span style="font-family:var(--font-mono);color:var(--amber)">74%</span></td>
+            <td style="font-family:var(--font-mono);font-size:11px;color:var(--text-muted)">Hoy, 11:15</td>
+            <td><span class="badge badge-green">ACTIVO</span></td>
+            <td>
+              <button class="tbl-btn" onclick="showToast('Perfil — próximamente')"><i data-lucide="user" size="11"></i> Ver perfil</button>
+              <button class="tbl-btn danger" onclick="confirmDelete('alumno')"><i data-lucide="trash-2" size="11"></i></button>
+            </td>
+          </tr>
+          <tr>
+            <td><div class="stu-cell"><div class="stu-ava" style="background:linear-gradient(135deg,#1a1510,#0a0c08);border:1.5px solid rgba(255,184,0,.3);color:var(--amber)">CM</div><strong>Carlos Mendoza</strong></div></td>
+            <td style="font-family:var(--font-mono);font-size:11px;color:var(--text-secondary)">ITT2024003</td>
+            <td>2</td><td><span style="font-family:var(--font-mono);color:var(--red)">61%</span></td>
+            <td style="font-family:var(--font-mono);font-size:11px;color:var(--text-muted)">Ayer, 18:40</td>
+            <td><span class="badge badge-amber">IRREGULAR</span></td>
+            <td>
+              <button class="tbl-btn" onclick="showToast('Perfil — próximamente')"><i data-lucide="user" size="11"></i> Ver perfil</button>
+              <button class="tbl-btn danger" onclick="confirmDelete('alumno')"><i data-lucide="trash-2" size="11"></i></button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ── CALIFICACIONES ─────────────────────────────── -->
+  <div class="view" id="view-grades">
+    <div class="page-head">
+      <div class="page-tag">EVALUACIÓN</div>
+      <h1 class="page-h1">Calificaciones</h1>
+    </div>
+    <div class="table-wrap">
+      <div class="empty-state">
+        <div class="empty-icon"><i data-lucide="bar-chart-2" size="24"></i></div>
+        <div class="empty-title">Módulo de calificaciones</div>
+        <div class="empty-sub">Selecciona un curso desde la vista de <strong style="color:var(--purple)">Cursos</strong><br>para ver el desglose por alumno y actividad.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── SETTINGS ───────────────────────────────────── -->
+  <div class="view" id="view-settings">
+    <div class="page-head">
+      <div class="page-tag">CONFIGURACIÓN</div>
+      <h1 class="page-h1">Ajustes de la Plataforma</h1>
+    </div>
+    <div class="table-wrap" style="padding:26px">
+      <div class="form-grid">
+        <div class="form-group">
+          <label>Nombre de la institución</label>
+          <input type="text" value="Instituto Tecnológico de Tlalnepantla">
+        </div>
+        <div class="form-group">
+          <label>Nombre de la plataforma</label>
+          <input type="text" value="CiberGenIA">
+        </div>
+        <div class="form-group">
+          <label>Período escolar actual</label>
+          <input type="text" value="Enero–Junio 2026">
+        </div>
+        <div class="form-group">
+          <label>Idioma predeterminado</label>
+          <select><option>Español</option><option>English</option></select>
+        </div>
+        <div class="form-group full">
+          <label>Descripción / Mensaje de bienvenida</label>
+          <textarea>Plataforma de aprendizaje en línea para la carrera de Ingeniería en Tecnologías de la Información y Comunicaciones.</textarea>
+        </div>
+      </div>
+      <div class="form-actions">
+        <button class="btn-secondary">Cancelar</button>
+        <button class="btn-primary" onclick="showToast('Configuración guardada ✓')">
+          <i data-lucide="save" size="13"></i> Guardar cambios
+        </button>
+      </div>
+    </div>
+  </div>
+
+</main>
+
+<!-- ══════════════════════════════════════════════════
+     MODAL: NUEVO CURSO
+══════════════════════════════════════════════════ -->
+<div class="modal-overlay" id="modal-course">
+  <div class="modal">
+    <div class="modal-top">
+      <div style="display:flex;align-items:flex-start;gap:12px">
+        <div class="modal-ico"><i data-lucide="book-plus" size="18"></i></div>
+        <div>
+          <div class="modal-title">Nuevo Curso</div>
+          <div class="modal-sub">// Completar información del curso</div>
+        </div>
+      </div>
+      <button class="modal-close" onclick="closeModal('course')"><i data-lucide="x" size="16"></i></button>
+    </div>
+    <div class="form-grid">
+      <div class="form-group full"><label>Nombre del curso *</label><input type="text" placeholder="Ej. Seguridad en Redes Avanzada" id="cNombre"></div>
+      <div class="form-group"><label>Categoría *</label>
+        <select id="cCat"><option>Ciberseguridad</option><option>Redes</option><option>Desarrollo Web</option><option>Ciencia de Datos</option><option>Programación</option><option>Sistemas Operativos</option><option>Otro</option></select>
+      </div>
+      <div class="form-group"><label>Nivel</label>
+        <select id="cNivel"><option>Principiante</option><option>Intermedio</option><option>Avanzado</option></select>
+      </div>
+      <div class="form-group"><label>Duración estimada (horas)</label><input type="number" placeholder="40" id="cDur"></div>
+      <div class="form-group"><label>Código del curso</label><input type="text" placeholder="ITTLA-2026-SEC" id="cCod"></div>
+      <div class="form-group full"><label>Descripción</label><textarea placeholder="Describe los objetivos y contenido principal del curso…" id="cDesc"></textarea></div>
+    </div>
+    <div style="margin-top:18px">
+      <label style="display:block;margin-bottom:10px">Módulos del curso</label>
+      <div class="module-list" id="modalModuleList">
+        <div class="module-item">
+          <i data-lucide="grip-vertical" size="16" class="module-drag"></i>
+          <span class="module-num">M01</span>
+          <div class="module-info">
+            <div class="module-name">Introducción al curso</div>
+            <div class="module-meta"><span>3 actividades</span><span>2h</span></div>
+          </div>
+          <div class="module-actions">
+            <button class="icon-btn"><i data-lucide="pencil" size="12"></i></button>
+            <button class="icon-btn del"><i data-lucide="trash-2" size="12"></i></button>
+          </div>
+        </div>
+      </div>
+      <button class="add-module-btn" onclick="addModule()"><i data-lucide="plus" size="14"></i> Agregar módulo</button>
+    </div>
+    <div class="form-actions">
+      <button class="btn-secondary" onclick="closeModal('course')">Cancelar</button>
+      <button class="btn-primary" onclick="saveCourse()"><i data-lucide="save" size="13"></i> Guardar curso</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════
+     MODAL: NUEVA ACTIVIDAD
+══════════════════════════════════════════════════ -->
+<div class="modal-overlay" id="modal-activity">
+  <div class="modal">
+    <div class="modal-top">
+      <div style="display:flex;align-items:flex-start;gap:12px">
+        <div class="modal-ico"><i data-lucide="clipboard-plus" size="18"></i></div>
+        <div><div class="modal-title">Nueva Actividad</div><div class="modal-sub">// Agregar evaluación o tarea</div></div>
+      </div>
+      <button class="modal-close" onclick="closeModal('activity')"><i data-lucide="x" size="16"></i></button>
+    </div>
+    <div class="form-grid">
+      <div class="form-group full"><label>Nombre de la actividad *</label><input type="text" placeholder="Ej. Examen Módulo 5"></div>
+      <div class="form-group"><label>Tipo de actividad</label>
+        <select><option>Examen</option><option>Quiz</option><option>Laboratorio</option><option>Proyecto</option><option>Tarea</option><option>Actividad práctica</option></select>
+      </div>
+      <div class="form-group"><label>Curso</label>
+        <select><option>CyberOps Associate</option><option>HTML Essentials</option><option>CCNA: Intro a Redes</option><option>Ciencia de Datos</option></select>
+      </div>
+      <div class="form-group"><label>Módulo</label>
+        <select><option>Módulo 1</option><option>Módulo 2</option><option>Módulo 3</option><option>Módulo Final</option></select>
+      </div>
+      <div class="form-group"><label>Puntaje máximo</label><input type="number" placeholder="100"></div>
+      <div class="form-group"><label>Ponderación (%)</label><input type="number" placeholder="20"></div>
+      <div class="form-group"><label>Fecha de apertura</label><input type="text" placeholder="2026-05-19"></div>
+      <div class="form-group"><label>Fecha límite</label><input type="text" placeholder="2026-05-24"></div>
+      <div class="form-group full"><label>Instrucciones</label><textarea placeholder="Instrucciones para los alumnos…"></textarea></div>
+    </div>
+    <div class="form-actions">
+      <button class="btn-secondary" onclick="closeModal('activity')">Cancelar</button>
+      <button class="btn-primary" onclick="saveActivity()"><i data-lucide="save" size="13"></i> Guardar actividad</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════
+     MODAL: ALUMNO
+══════════════════════════════════════════════════ -->
+<div class="modal-overlay" id="modal-student">
+  <div class="modal">
+    <div class="modal-top">
+      <div style="display:flex;align-items:flex-start;gap:12px">
+        <div class="modal-ico"><i data-lucide="user-plus" size="18"></i></div>
+        <div><div class="modal-title">Agregar Alumno</div><div class="modal-sub">// Registrar nuevo estudiante</div></div>
+      </div>
+      <button class="modal-close" onclick="closeModal('student')"><i data-lucide="x" size="16"></i></button>
+    </div>
+    <div class="form-grid">
+      <div class="form-group"><label>Nombre(s)</label><input type="text" placeholder="Nombre"></div>
+      <div class="form-group"><label>Apellidos</label><input type="text" placeholder="Apellidos"></div>
+      <div class="form-group"><label>Número de matrícula</label><input type="text" placeholder="ITT2026XXX"></div>
+      <div class="form-group"><label>Correo institucional</label><input type="text" placeholder="alumno@ittla.edu.mx"></div>
+      <div class="form-group full"><label>Cursos a inscribir</label>
+        <select multiple style="height:90px">
+          <option>CyberOps Associate</option><option>HTML Essentials</option><option>CCNA: Intro a Redes</option><option>Ciencia de Datos</option>
+        </select>
+      </div>
+    </div>
+    <div class="form-actions">
+      <button class="btn-secondary" onclick="closeModal('student')">Cancelar</button>
+      <button class="btn-primary" onclick="saveStudent()"><i data-lucide="user-check" size="13"></i> Registrar alumno</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════
+     MODAL: MÓDULOS
+══════════════════════════════════════════════════ -->
+<div class="modal-overlay" id="modal-module">
+  <div class="modal">
+    <div class="modal-top">
+      <div style="display:flex;align-items:flex-start;gap:12px">
+        <div class="modal-ico"><i data-lucide="layers" size="18"></i></div>
+        <div><div class="modal-title">Gestionar Módulos</div><div class="modal-sub">// Estructura del curso</div></div>
+      </div>
+      <button class="modal-close" onclick="closeModal('module')"><i data-lucide="x" size="16"></i></button>
+    </div>
+    <div class="module-list" id="moduleList">
+      <div class="module-item">
+        <i data-lucide="grip-vertical" size="16" class="module-drag"></i>
+        <span class="module-num">M01</span>
+        <div class="module-info"><div class="module-name">Introducción al curso</div><div class="module-meta"><span>2 actividades</span><span>2h</span></div></div>
+        <div class="module-actions">
+          <button class="icon-btn"><i data-lucide="pencil" size="12"></i></button>
+          <button class="icon-btn del" onclick="showToast('Módulo eliminado')"><i data-lucide="trash-2" size="12"></i></button>
+        </div>
+      </div>
+      <div class="module-item">
+        <i data-lucide="grip-vertical" size="16" class="module-drag"></i>
+        <span class="module-num">M02</span>
+        <div class="module-info"><div class="module-name">Fundamentos de redes</div><div class="module-meta"><span>4 actividades</span><span>5h</span></div></div>
+        <div class="module-actions">
+          <button class="icon-btn"><i data-lucide="pencil" size="12"></i></button>
+          <button class="icon-btn del" onclick="showToast('Módulo eliminado')"><i data-lucide="trash-2" size="12"></i></button>
+        </div>
+      </div>
+      <div class="module-item">
+        <i data-lucide="grip-vertical" size="16" class="module-drag"></i>
+        <span class="module-num">M03</span>
+        <div class="module-info"><div class="module-name">Protocolos TCP/IP</div><div class="module-meta"><span>5 actividades</span><span>8h</span></div></div>
+        <div class="module-actions">
+          <button class="icon-btn"><i data-lucide="pencil" size="12"></i></button>
+          <button class="icon-btn del" onclick="showToast('Módulo eliminado')"><i data-lucide="trash-2" size="12"></i></button>
+        </div>
+      </div>
+    </div>
+    <button class="add-module-btn" onclick="addModuleToList()"><i data-lucide="plus" size="14"></i> Agregar módulo</button>
+    <div class="form-actions">
+      <button class="btn-secondary" onclick="closeModal('module')">Cancelar</button>
+      <button class="btn-primary" onclick="showToast('Módulos guardados ✓'); closeModal('module')"><i data-lucide="save" size="13"></i> Guardar</button>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast">
+  <div class="toast-ico"><i data-lucide="check" size="14"></i></div>
+  <span id="toastMsg">Guardado correctamente</span>
+</div>
+
+<script>
+  lucide.createIcons();
+
+  let moduleCount = 1;
+
+  function showView(id, btn) {
+    document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+    document.querySelectorAll('.sidebar-item').forEach(b => b.classList.remove('active'));
+    document.getElementById('view-' + id).classList.add('active');
+    btn.classList.add('active');
+  }
+
+  function openModal(id)  { document.getElementById('modal-' + id).classList.add('open'); }
+  function closeModal(id) { document.getElementById('modal-' + id).classList.remove('open'); }
+
+  document.querySelectorAll('.modal-overlay').forEach(o => {
+    o.addEventListener('click', function(e) { if (e.target === this) this.classList.remove('open'); });
+  });
+
+  function showToast(msg) {
+    const t = document.getElementById('toast');
+    document.getElementById('toastMsg').textContent = msg;
+    t.classList.add('show');
+    setTimeout(() => t.classList.remove('show'), 3000);
+  }
+
+  function saveCourse() {
+    const nombre = document.getElementById('cNombre').value.trim();
+    if (!nombre) { showToast('⚠ Ingresa el nombre del curso'); return; }
+    const cat = document.getElementById('cCat').value;
+    const nivel = document.getElementById('cNivel').value;
+    const badges = { 'Principiante':'badge-green', 'Intermedio':'badge-amber', 'Avanzado':'badge-red' };
+    const row = document.createElement('tr');
+    row.innerHTML = `
+      <td><strong>${nombre}</strong></td>
+      <td style="color:var(--text-secondary)">${cat}</td>
+      <td><span class="badge ${badges[nivel]}">${nivel.toUpperCase()}</span></td>
+      <td>0</td>
+      <td><div class="progress-mini"><div class="progress-mini-fill" style="width:0%"></div></div><span style="font-family:var(--font-mono);font-size:10px;color:var(--text-secondary)">0%</span></td>
+      <td><span class="badge badge-green">ACTIVO</span></td>
+      <td>
+        <button class="tbl-btn"><i data-lucide="pencil" size="11"></i> Editar</button>
+        <button class="tbl-btn danger"><i data-lucide="trash-2" size="11"></i></button>
+      </td>`;
+    document.getElementById('courseTableBody').appendChild(row);
+    lucide.createIcons();
+    closeModal('course');
+    showToast(`Curso "${nombre}" creado ✓`);
+    document.getElementById('cNombre').value = '';
+    document.getElementById('cDesc').value   = '';
+  }
+
+  function saveActivity() { closeModal('activity'); showToast('Actividad guardada ✓'); }
+  function saveStudent()  { closeModal('student');  showToast('Alumno registrado ✓'); }
+
+  function editCourse(name) {
+    document.getElementById('cNombre').value = name;
+    openModal('course');
+  }
+
+  function confirmDelete(tipo) {
+    if (confirm(`¿Confirmas eliminar este ${tipo}? Esta acción no se puede deshacer.`)) {
+      showToast(`${tipo.charAt(0).toUpperCase()+tipo.slice(1)} eliminado ✓`);
+    }
+  }
+
+  function addModule() {
+    moduleCount++;
+    const list = document.getElementById('modalModuleList');
+    const item = document.createElement('div');
+    item.className = 'module-item';
+    item.innerHTML = `
+      <i data-lucide="grip-vertical" size="16" class="module-drag"></i>
+      <span class="module-num">M0${moduleCount}</span>
+      <div class="module-info">
+        <div class="module-name">
+          <input type="text" placeholder="Nombre del módulo"
+            style="background:none;border:none;border-bottom:1px solid var(--border);padding:2px 4px;
+                   color:var(--text-primary);font-family:var(--font-ui);font-size:13px;width:180px;outline:none">
+        </div>
+        <div class="module-meta"><span>0 actividades</span></div>
+      </div>
+      <div class="module-actions">
+        <button class="icon-btn del" onclick="this.closest('.module-item').remove()">
+          <i data-lucide="trash-2" size="12"></i>
+        </button>
+      </div>`;
+    list.appendChild(item);
+    lucide.createIcons();
+    item.querySelector('input').focus();
+  }
+
+  function addModuleToList() {
+    const list  = document.getElementById('moduleList');
+    const count = list.children.length + 1;
+    const item  = document.createElement('div');
+    item.className = 'module-item';
+    item.innerHTML = `
+      <i data-lucide="grip-vertical" size="16" class="module-drag"></i>
+      <span class="module-num">M0${count}</span>
+      <div class="module-info">
+        <div class="module-name">
+          <input type="text" placeholder="Nombre del módulo"
+            style="background:none;border:none;border-bottom:1px solid var(--border);padding:2px 4px;
+                   color:var(--text-primary);font-family:var(--font-ui);font-size:13px;width:180px;outline:none">
+        </div>
+        <div class="module-meta"><span>0 actividades</span></div>
+      </div>
+      <div class="module-actions">
+        <button class="icon-btn del" onclick="this.closest('.module-item').remove()">
+          <i data-lucide="trash-2" size="12"></i>
+        </button>
+      </div>`;
+    list.appendChild(item);
+    lucide.createIcons();
+    item.querySelector('input').focus();
+  }
+
+  function searchTable(inputId, tableId) {
+    const q = document.getElementById(inputId).value.toLowerCase();
+    document.querySelectorAll(`#${tableId} tbody tr`).forEach(row => {
+      row.style.display = row.textContent.toLowerCase().includes(q) ? '' : 'none';
+    });
+  }
+</script>
+</body>
+</html>
